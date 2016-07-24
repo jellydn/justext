@@ -14,7 +14,8 @@ describe('ParagraphMaker', () => {
       const htmlString = '<html><body></body></html>';
       const core = new Core();
       const dom = core.htmlToDom(htmlString);
-      const paragraphs = ParagraphMaker.makeParagraphs(dom);
+      const maker = new ParagraphMaker();
+      const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.not.equal(0);
     });
 
@@ -27,7 +28,8 @@ describe('ParagraphMaker', () => {
         '</body></html>';
       const core = new Core();
       const dom = core.htmlToDom(htmlString);
-      const paragraphs = ParagraphMaker.makeParagraphs(dom);
+      const maker = new ParagraphMaker();
+      const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.not.equal(3);
       paragraphsEqual(paragraphs[0], 'Header', 1, 0);
       const text = 'text and some other words that I have in my head now';
