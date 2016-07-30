@@ -104,7 +104,7 @@ class Core {
     // TODO: process encode for html string
     const htmlHandler = new htmlparser.DefaultHandler((error, dom) => {
       if (error) {
-        console.error(error);
+        console.warn(error);
       } else {
         console.log('dom', JSON.stringify(dom, null, 2));
       }

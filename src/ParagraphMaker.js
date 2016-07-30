@@ -22,8 +22,9 @@ class ParagraphMaker {
   /**
    * Converts DOM into paragraphs.
    **/
-  makeParagraphs(dom) {
-    return dom;
+  makeParagraphs(root) {
+    console.log('root', JSON.stringify(root, null, 2));
+    return this.paragraphs;
   }
 
 }

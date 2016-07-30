@@ -70,6 +70,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ParagraphMaker2 = _interopRequireDefault(_ParagraphMaker);
 	
+	var _Paragraph = __webpack_require__(4);
+	
+	var _Paragraph2 = _interopRequireDefault(_Paragraph);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -101,7 +105,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Converts an HTML page into a list of classified paragraphs. Each paragraph
 	     * is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
 	     **/
-	    value: function jusText(htmlText, stoplist) {
+	    value: function jusText(htmlText) {
+	      var stoplist = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 	      var lengthLow = arguments.length <= 2 || arguments[2] === undefined ? LENGTH_LOW_DEFAULT : arguments[2];
 	      var lengthHigh = arguments.length <= 3 || arguments[3] === undefined ? LENGTH_HIGH_DEFAULT : arguments[3];
 	      var stopwordsLow = arguments.length <= 4 || arguments[4] === undefined ? STOPWORDS_LOW_DEFAULT : arguments[4];
@@ -115,6 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var paragraphs = _ParagraphMaker2.default.makeParagraphs(htmlDocument);
 	      paragraphs = this.classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh, stopwordsLow, stopwordsHigh, maxLinkDensity, noHeadings);
 	      paragraphs = this.reviseParagraphClassification(paragraphs, maxHeadingDistance);
+	
 	      return paragraphs;
 	    }
 	
@@ -124,9 +130,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'classifyParagraphs',
-	    value: function classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh, stopwordsLow, stopwordsHigh, maxLinkDensity, noHeadings) {
-	      console.log(noHeadings);
-	      return paragraphs;
+	    value: function classifyParagraphs() {
+	      var paragraphs = arguments.length <= 0 || arguments[0] === undefined ? [_Paragraph2.default] : arguments[0];
+	      var stoplist = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+	      var lengthLow = arguments.length <= 2 || arguments[2] === undefined ? LENGTH_LOW_DEFAULT : arguments[2];
+	      var lengthHigh = arguments.length <= 3 || arguments[3] === undefined ? LENGTH_HIGH_DEFAULT : arguments[3];
+	      var stopwordsLow = arguments.length <= 4 || arguments[4] === undefined ? STOPWORDS_LOW_DEFAULT : arguments[4];
+	      var stopwordsHigh = arguments.length <= 5 || arguments[5] === undefined ? STOPWORDS_HIGH_DEFAULT : arguments[5];
+	      var maxLinkDensity = arguments.length <= 6 || arguments[6] === undefined ? MAX_LINK_DENSITY_DEFAULT : arguments[6];
+	      var maxHeadingDistance = arguments.length <= 7 || arguments[7] === undefined ? MAX_HEADING_DISTANCE_DEFAULT : arguments[7];
+	      var noHeadings = arguments.length <= 8 || arguments[8] === undefined ? NO_HEADINGS_DEFAULT : arguments[8];
+	
+	      // use cache some string function
+	      var search = String.prototype.search;
+	      var indexOf = String.prototype.indexOf;
+	      var toLowerCase = String.prototype.toLowerCase;
+	
+	      var stopList = stoplist.map(function (item) {
+	        return toLowerCase.call(item);
+	      });
+	      var result = [];
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = paragraphs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var paragraph = _step.value;
+	
+	          var text = paragraph.text();
+	          var length = paragraph.len();
+	          var stopwordDesity = paragraph.stopwordDesity(stopList);
+	          var linksDesity = paragraph.linksDesity();
+	          paragraph.heading = !noHeadings && paragraph.isHeading();
+	
+	          if (Number(linksDesity) > Number(maxLinkDensity)) {
+	            paragraph.cfClass = 'bad';
+	          } else if (indexOf.call(text, '\xa9') !== -1 || indexOf.call(this, '&copy') !== -1) {
+	            paragraph.cfClass = 'bad';
+	          } else if (search.call(paragraph.domPath, '^select|.select') !== -1) {
+	            paragraph.cfClass = 'bad';
+	          } else if (length < lengthLow) {
+	            if (paragraph.charsCountInLinks > 0) {
+	              paragraph.cfClass = 'bad';
+	            } else {
+	              paragraph.cfClass = 'short';
+	            }
+	          } else if (Number(stopwordDesity) >= Number(stopwordsHigh)) {
+	            if (Number(length) > Number(lengthHigh)) {
+	              paragraph.cfClass = 'good';
+	            } else {
+	              paragraph.cfClass = 'neargood';
+	            }
+	          } else if (Number(stopwordDesity) >= Number(stopwordsLow)) {
+	            paragraph.cfClass = 'neargood';
+	          } else {
+	            paragraph.cfClass = 'bad';
+	          }
+	          result.push(paragraph);
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return result;
 	    }
 	
 	    /**
@@ -136,7 +214,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'reviseParagraphClassification',
-	    value: function reviseParagraphClassification(paragraphs, maxHeadingDistance) {
+	    value: function reviseParagraphClassification() {
+	      var paragraphs = arguments.length <= 0 || arguments[0] === undefined ? [_Paragraph2.default] : arguments[0];
+	      var maxHeadingDistance = arguments.length <= 1 || arguments[1] === undefined ? MAX_HEADING_DISTANCE_DEFAULT : arguments[1];
+	
 	      console.log(maxHeadingDistance);
 	      return paragraphs;
 	    }
@@ -152,7 +233,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // TODO: process encode for html string
 	      var htmlHandler = new _htmlparser2.default.DefaultHandler(function (error, dom) {
 	        if (error) {
-	          console.error(error);
+	          console.warn(error);
 	        } else {
 	          console.log('dom', JSON.stringify(dom, null, 2));
 	        }
@@ -181,44 +262,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // TODO: Process XML format
 	      // removes script section entirely
+	      var replace = String.prototype.replace;
 	      var str = rawHtml;
 	      if (options.script) {
-	        str = str.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ');
+	        str = replace.call(str, /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ');
 	      }
 	
 	      // removes iframe section entirely
 	      if (options.iframe) {
-	        str = str.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, ' ');
+	        str = replace.call(str, /<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, ' ');
 	      }
 	
 	      // removes head section entirely
 	      if (options.head) {
-	        str = str.replace(/<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
+	        str = replace.call(str, /<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
 	      }
 	
 	      // removes style section entirely
 	      if (options.style) {
-	        str = str.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ');
+	        str = replace.call(str, /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ');
 	      }
 	
 	      // remove comment
 	      if (options.comment) {
-	        str = str.replace(/<!--[^>]*-->/gi, ' ');
+	        str = replace.call(str, /<!--[^>]*-->/gi, ' ');
 	      }
 	
 	      // remove all remaining tags
 	      if (options.html) {
-	        str = str.replace(/<\/?[a-z]+(?:\s[a-z0-9]+(\s*=\s*('.*?'|".*?"|\d+))?)*[\s\/]*>/gm, ' ');
+	        str = replace.call(str, /<\/?[a-z]+(?:\s[a-z0-9]+(\s*=\s*('.*?'|".*?"|\d+))?)*[\s\/]*>/gm, ' ');
 	      }
 	
 	      // replace more than one space with a single space
-	      str = str.replace(/\s{2,}/g, '');
+	      str = replace.call(str, /\s{2,}/g, '');
 	      // remove space between tags
-	      str = str.replace(/>\s</g, '><');
+	      str = replace.call(str, />\s</g, '><');
 	      // remove lead space
-	      str = str.replace(/^\s+/, '');
+	      str = replace.call(str, /^\s+/, '');
 	      // remove trailing space
-	      str = str.replace(/\s+$/, '');
+	      str = replace.call(str, /\s+$/, '');
 	      return str;
 	    }
 	  }]);
@@ -1078,6 +1160,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
+	/**
+	 * A class for converting a HTML page represented as a DOM object into a list
+	 * of paragraphs.
+	 * @class ParagraphMaker
+	 */
 	var ParagraphMaker = function () {
 	  function ParagraphMaker() {
 	    _classCallCheck(this, ParagraphMaker);
@@ -1100,8 +1187,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'makeParagraphs',
-	    value: function makeParagraphs(dom) {
-	      return dom;
+	    value: function makeParagraphs(root) {
+	      console.log('root', JSON.stringify(root, null, 2));
+	      return this.paragraphs;
 	    }
 	  }]);
 	
@@ -1114,21 +1202,275 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var PathInfo = function PathInfo() {
-	  _classCallCheck(this, PathInfo);
+	/**
+	 *
+	 * list of triples (tag name, order, children)
+	 * @class PathInfo
+	 */
+	var PathInfo = function () {
+	  function PathInfo() {
+	    _classCallCheck(this, PathInfo);
 	
-	  this.elements = [];
-	};
+	    this.elements = [];
+	  }
+	
+	  _createClass(PathInfo, [{
+	    key: 'dom',
+	    value: function dom() {
+	      var html = [];
+	      // base on tag name
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = this.elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var item = _step.value;
+	
+	          html.push(item[0]);
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return html.join('.');
+	    }
+	  }, {
+	    key: 'xpath',
+	    value: function xpath() {
+	      var path = '';
+	      // path base on tag name and order
+	      if (this.elements.length) {
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+	
+	        try {
+	          for (var _iterator2 = this.elements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var item = _step2.value;
+	
+	            path += '/' + item[0] + '[' + item[1] + ']';
+	          }
+	        } catch (err) {
+	          _didIteratorError2 = true;
+	          _iteratorError2 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	              _iterator2.return();
+	            }
+	          } finally {
+	            if (_didIteratorError2) {
+	              throw _iteratorError2;
+	            }
+	          }
+	        }
+	      } else {
+	        path = '/';
+	      }
+	      return path;
+	    }
+	  }, {
+	    key: 'append',
+	    value: function append(tagName) {
+	      var children = this.getChildren();
+	      var order = children[tagName] + 1 || 1;
+	      children[tagName] = order;
+	      this.elements.push([tagName, order, {}]);
+	      return this;
+	    }
+	  }, {
+	    key: 'getChildren',
+	    value: function getChildren() {
+	      if (this.elements.length) {
+	        return this.elements[this.elements.length - 1][2];
+	      }
+	      return {};
+	    }
+	  }, {
+	    key: 'pop',
+	    value: function pop() {
+	      this.elements.pop();
+	      return this;
+	    }
+	  }]);
+	
+	  return PathInfo;
+	}();
 	
 	exports.default = PathInfo;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _PathInfo = __webpack_require__(3);
+	
+	var _PathInfo2 = _interopRequireDefault(_PathInfo);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Object representing one block of text in HTML.
+	 * @class Paragraph
+	 */
+	var Paragraph = function () {
+	  function Paragraph() {
+	    var path = arguments.length <= 0 || arguments[0] === undefined ? _PathInfo2.default : arguments[0];
+	
+	    _classCallCheck(this, Paragraph);
+	
+	    this.domPath = path.dom();
+	    this.xpath = path.xpath();
+	    this.textNodes = [];
+	    this.charsCountInLinks = 0;
+	    this.tagsCount = 0;
+	    this.classType = '';
+	  }
+	
+	  _createClass(Paragraph, [{
+	    key: 'isHeading',
+	    value: function isHeading() {
+	      var re = /\bh\d\b/;
+	      return this.domPath.search(re);
+	    }
+	  }, {
+	    key: 'isBoilerplate',
+	    value: function isBoilerplate() {
+	      return this.classType !== 'good';
+	    }
+	  }, {
+	    key: 'text',
+	    value: function text() {
+	      var str = '';
+	      str = this.textNodes.join('');
+	      // remove multi space to one space
+	      str = str.replace(/\s{2,}/g, ' ');
+	      // remove lead space
+	      str = str.replace(/^\s+/, '');
+	      // remove trailing space
+	      str = str.replace(/\s+$/, '');
+	      return str;
+	    }
+	  }, {
+	    key: 'len',
+	    value: function len() {
+	      return this.text().length;
+	    }
+	  }, {
+	    key: 'wordsCount',
+	    value: function wordsCount() {
+	      return this.text().split(' ').length;
+	    }
+	  }, {
+	    key: 'containsText',
+	    value: function containsText() {
+	      return this.textNodes.length > 0;
+	    }
+	  }, {
+	    key: 'appendText',
+	    value: function appendText() {
+	      var str = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	      var replace = String.prototype.replace;
+	      var text = replace.call(str, /\s{2,}/g, ' ');
+	      this.textNodes.push(text);
+	      return text;
+	    }
+	  }, {
+	    key: 'stopwordsCount',
+	    value: function stopwordsCount() {
+	      var stopwords = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	
+	      var count = 0;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = this.text().split(' ')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var word = _step.value;
+	
+	          if (stopwords.indexOf(word.toLowerCase()) !== -1) {
+	            count++;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return count;
+	    }
+	  }, {
+	    key: 'stopwordDesity',
+	    value: function stopwordDesity() {
+	      var stopwords = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	
+	      var count = this.wordsCount();
+	      if (count === 0) {
+	        return 0;
+	      }
+	
+	      return this.stopwordsCount(stopwords) / count;
+	    }
+	  }, {
+	    key: 'linksDesity',
+	    value: function linksDesity() {
+	      var textLength = this.len();
+	      if (textLength === 0) {
+	        return 0;
+	      }
+	
+	      return this.charsCountInLinks / textLength;
+	    }
+	  }]);
+	
+	  return Paragraph;
+	}();
+	
+	exports.default = Paragraph;
 
 /***/ }
 /******/ ])
