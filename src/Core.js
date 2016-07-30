@@ -50,7 +50,6 @@ class Core {
 
     const stopList = stoplist.map(item => toLowerCase.call(item));
     const result = [];
-
     for (const paragraph of paragraphs) {
       const text = paragraph.text();
       const length = paragraph.len();
@@ -76,12 +75,11 @@ class Core {
         } else {
           paragraph.cfClass = 'neargood';
         }
-      } else if (Number(stopwordDesity) > Number(stopwordsLow)) {
+      } else if (Number(stopwordDesity) >= Number(stopwordsLow)) {
         paragraph.cfClass = 'neargood';
       } else {
         paragraph.cfClass = 'bad';
       }
-
       result.push(paragraph);
     }
 
