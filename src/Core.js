@@ -88,7 +88,90 @@ class Core {
    **/
   reviseParagraphClassification(paragraphs = [Paragraph],
     maxHeadingDistance = MAX_HEADING_DISTANCE_DEFAULT) {
-    console.log(maxHeadingDistance);
+    const reviseParagraphs = [];
+    // copy classes
+    for (const paragraph of paragraphs) {
+      paragraph.classType = paragraph.cfClass;
+      reviseParagraphs.push(paragraph);
+    }
+
+    // good headings
+    reviseParagraphs.forEach((paragraph, index) => {
+      if (paragraph.isHeading() && paragraph.classType === 'short') {
+        let counter = index + 1;
+        let distance = 0;
+        while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
+          if (reviseParagraphs[counter].classType === 'good') {
+            reviseParagraphs[counter].classType = 'neargood';
+            break;
+          }
+          distance += reviseParagraphs[counter].len();
+          counter++;
+        }
+      }
+    });
+
+    // classify short
+    const newClassType = [];
+    reviseParagraphs.forEach((paragraph, index) => {
+      if (paragraph.classType === 'short') {
+        const prevNeighbour = this.getPrevNeighbour(index, reviseParagraphs, true);
+        const nextNeighbour = this.getNextNeighbour(index, reviseParagraphs, true);
+        const neighbours = [prevNeighbour];
+        if (neighbours.indexOf(nextNeighbour) === -1) {
+          neighbours.push(nextNeighbour);
+        }
+
+        if (neighbours.length === 1 && neighbours[0] === 'good') {
+          newClassType[index] = 'good';
+        } else if (neighbours.length === 1 && neighbours[0] === 'bad') {
+          newClassType[index] = 'bad';
+        } else if (
+          (prevNeighbour === 'bad' &&
+            this.getPrevNeighbour(index, reviseParagraphs, false) === 'neargood') ||
+          (nextNeighbour === 'bad' &&
+            this.getNextNeighbour(index, reviseParagraphs, false) === 'neargood')
+        ) {
+          newClassType[index] = 'good';
+        } else {
+          newClassType[index] = 'bad';
+        }
+      }
+    });
+
+    newClassType.forEach((classType, index) => {
+      reviseParagraphs[index].classType = classType;
+    });
+
+    // revise neargood
+    reviseParagraphs.forEach((paragraph, index) => {
+      if (paragraph.classType === 'neargood') {
+        const prevNeighbour = this.getPrevNeighbour(index, reviseParagraphs, true);
+        const nextNeighbour = this.getNextNeighbour(index, reviseParagraphs, true);
+        if (prevNeighbour === 'bad' && nextNeighbour === 'bad') {
+          reviseParagraphs[index] = 'bad';
+        } else {
+          reviseParagraphs[index] = 'good';
+        }
+      }
+    });
+
+    // more good headings
+    reviseParagraphs.forEach((paragraph, index) => {
+      if (paragraph.isHeading() && paragraph.classType === 'bad' && paragraph.cfClass !== 'bad') {
+        let counter = index + 1;
+        let distance = 0;
+        while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
+          if (reviseParagraphs[counter].classType === 'good') {
+            reviseParagraphs[counter].classType = 'good';
+            break;
+          }
+          distance += reviseParagraphs[counter].len();
+          counter++;
+        }
+      }
+    });
+
     return paragraphs;
   }
 
@@ -118,6 +201,7 @@ class Core {
     options = {
       html: false,
       head: false,
+      footer: false,
       script: true,
       iframe: true,
       style: true,
@@ -141,6 +225,11 @@ class Core {
     // removes head section entirely
     if (options.head) {
       str = replace.call(str, /<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
+    }
+
+    // removes footer section entirely
+    if (options.footer) {
+      str = replace.call(str, /<footer\b[^<]*(?:(?!<\/footer>)<[^<]*)*<\/footer>/gi, ' ');
     }
 
     // removes style section entirely and inline style
@@ -172,6 +261,44 @@ class Core {
     str = replace.call(str, /\s+$/, '');
     console.log('preprocessor', str);
     return str;
+  }
+
+  /**
+   * Get neighbour class type of paragraphs
+   * */
+  getNeighbour(index, paragraphs, ignoreNearGood, inc, boundary) {
+    let checkIndex = index;
+    while (Number(checkIndex + inc) !== Number(boundary)) {
+      checkIndex = Number(checkIndex + inc);
+      const classType = paragraphs[checkIndex].classType;
+      if (['good', 'bad'].indexOf(classType) !== -1) {
+        return classType;
+      }
+
+      if (classType === 'neargood' && !ignoreNearGood) {
+        return classType;
+      }
+    }
+
+    return 'bad';
+  }
+
+  /**
+   * Return the class of the paragraph at the top end of the short/neargood
+   * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
+   * can be returned, otherwise 'neargood' can be returned, too.
+   * */
+  getPrevNeighbour(index, paragraphs, ignoreNearGood) {
+    return this.getNeighbour(index, paragraphs, ignoreNearGood, -1, -1);
+  }
+
+  /**
+   * Return the class of the paragraph at the bottom end of the short/neargood
+   * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
+   * can be returned, otherwise 'neargood' can be returned, too.
+   * */
+  getNextNeighbour(index, paragraphs, ignoreNearGood) {
+    return this.getNeighbour(index, paragraphs, ignoreNearGood, 1, paragraphs.length);
   }
 
 }

@@ -253,6 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var options = arguments.length <= 1 || arguments[1] === undefined ? {
 	        html: false,
 	        head: false,
+	        footer: false,
 	        script: true,
 	        iframe: true,
 	        style: true,
@@ -277,6 +278,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // removes head section entirely
 	      if (options.head) {
 	        str = replace.call(str, /<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
+	      }
+	
+	      // removes head section entirely
+	      if (options.footer) {
+	        str = replace.call(str, /<footer\b[^<]*(?:(?!<\/footer>)<[^<]*)*<\/footer>/gi, ' ');
 	      }
 	
 	      // removes style section entirely and inline style

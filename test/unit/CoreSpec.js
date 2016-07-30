@@ -8,7 +8,7 @@ describe('Core', () => {
         '<!-- comment --> text<p>footer</p></body></html>';
       const core = new Core();
       const dom = core.preprocessor(rawHtml, { comment: true });
-      const expected = '<html><body><h1>Header</h1>text<p>footer</p></body></html>';
+      const expected = '<html><body><h1>Header</h1> text<p>footer</p></body></html>';
       expect(dom).to.be.equal(expected);
     });
 
