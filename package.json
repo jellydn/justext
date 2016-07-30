@@ -61,6 +61,7 @@
     "mainVarName": "justext"
   },
   "dependencies": {
+    "html-entities": "^1.2.0",
     "htmlparser": "^1.7.7"
   }
 }

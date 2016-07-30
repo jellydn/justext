@@ -10,6 +10,28 @@
         '<!-- comment --> text<p>footer</p></body></html>';
     var test = new justext.default();
     test.htmlToDom(test.preprocessor(rawHtml));
+
+    fetch('./examples/w3school.html', {
+        method: 'get',
+        headers: new Headers({
+            'Content-Type': 'text/plain'
+        }),
+        mode: 'no-cors',
+    }).then(function(response) {
+        return response.text();
+    }).then(function(htmlText) {
+        console.log('htmlText',htmlText);
+        // clean header of html
+        test.htmlToDom(test.preprocessor(htmlText, {
+            head: true,
+            script: true,
+            iframe: true,
+            style: true,
+            comment: true, }));
+    }).catch(function(err) {
+        console.log(err);
+    });
+
   </script>
 </head>
 

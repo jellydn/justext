@@ -1,4 +1,5 @@
 import htmlparser from 'htmlparser';
+import entities from 'html-entities';
 import ParagraphMaker from './ParagraphMaker';
 import Paragraph from './Paragraph.js';
 
@@ -9,12 +10,7 @@ const STOPWORDS_LOW_DEFAULT = 0.30;
 const STOPWORDS_HIGH_DEFAULT = 0.32;
 const NO_HEADINGS_DEFAULT = false;
 const MAX_HEADING_DISTANCE_DEFAULT = 200;
-// const PARAGRAPH_TAGS = [
-//   'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
-//   'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
-//   'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
-//   'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-// ];
+
 // const CHARSET_META_TAG_PATTERN = /<meta[^>]+charset=["']?([^'"/>\s]+)/i;
 
 class Core {
@@ -129,8 +125,10 @@ class Core {
     }) {
     // TODO: Process XML format
     // removes script section entirely
+    console.log('options', options);
     const replace = String.prototype.replace;
-    let str = rawHtml;
+    const htmlDecoding = new entities.AllHtmlEntities();
+    let str = htmlDecoding.decode(rawHtml);
     if (options.script) {
       str = replace.call(str, /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ');
     }
@@ -145,9 +143,11 @@ class Core {
       str = replace.call(str, /<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
     }
 
-    // removes style section entirely
+    // removes style section entirely and inline style
     if (options.style) {
       str = replace.call(str, /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ');
+      str = replace.call(str, /\s+style=["|'].*?["|']/gi, ' ');
+      str = replace.call(str, /\s+class=["|'].*?["|']/gi, ' ');
     }
 
     // remove comment
@@ -163,13 +163,14 @@ class Core {
     }
 
     // replace more than one space with a single space
-    str = replace.call(str, /\s{2,}/g, '');
+    str = replace.call(str, /\s{2,}/g, ' ');
     // remove space between tags
     str = replace.call(str, />\s</g, '><');
     // remove lead space
     str = replace.call(str, /^\s+/, '');
     // remove trailing space
     str = replace.call(str, /\s+$/, '');
+    console.log('preprocessor', str);
     return str;
   }
 
