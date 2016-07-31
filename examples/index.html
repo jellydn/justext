@@ -17,9 +17,9 @@
     }).then(function(htmlText) {
         console.log('htmlText',htmlText);
         console.log('default format', justext.default(htmlText));
-        console.log('default boilerplate format', justext.default(htmlText, [], 'boilerplate'));
-        console.log('detailed format', justext.default(htmlText, [], 'detailed'));
-        console.log('krdwrd format', justext.default(htmlText, [], 'krdwrd'));
+        console.log('default boilerplate format', justext.default(htmlText, 'English', 'boilerplate'));
+        console.log('detailed format', justext.default(htmlText, 'English', 'detailed'));
+        console.log('krdwrd format', justext.default(htmlText, 'English', 'krdwrd'));
     }).catch(function(err) {
         console.log(err);
     });

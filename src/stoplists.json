@@ -1,7 +1,4 @@
-import Core from './Core.js';
-import Presenter from './Presenter.js';
-/* eslint-disable */
-const STOP_LISTS_JSON = [
+[
   {
     "name": "Afrikaans",
     "data": "die\nvan\nen\nin\n'n\nis\nhet\nDie\nwat\nmet\nas\nte\nop\nword\nsy\nom\nwas\ndeur\nvir\nse\naan\nook\ntot\nna\nIn\ndat\nhy\nof\ndit\nnie\nhulle\nhet.\nuit\nby\nmaar\nkan\nsoos\nDit\neerste\nis.\noor\nander\nHy\neen\n’n\ngebruik\nnie.\nmeer\ntussen\njaar\nword.\nonder\nhierdie\ndaar\ntwee\nhet,\nteen\ngroot\nbaie\nis,\nstad\nbegin\nhul\nwaar\ntoe\negter\nsou\nbekend\nnuwe\nnog\neeu\nhaar\ngrootste\nhom\nSy\ndeel\ngebied\nnaam\n‘n\nDaar\nnie,\ntydens\nDuitse\nlater\nal\nHierdie\nde\nveral\nland\nOp\nnet\nsowat\nsal\nbestaan\nterwyl\nkon\nmense\nFranse\nvoor\nweer\ndié\nlaat\ngevolg\naantal\ndrie\nbevolking\nslegs\nword,\nsteeds\nHulle\nsaam\nkeer\nSuid-Afrika\nmaak\nverskeie\nso\nvorm\nmeeste\nVerenigde\nvanaf\nmoet\nklein\nalle\nBritse\ntweede\nkoning\ndorp\nkom\nreeds\nwas.\ndikwels\ngemaak\ngeen\nbelangrike\nten\ntyd\nhoofstad\ntaal\nwerk\nasook\nPous\ndan\nplaaslike\nhuidige\ndus\npolitieke\nAmerikaanse\neinde\ndood\nná\nmiljoen\neie\nklub\nvolgens\ngeword\nMet\ngehad\nAs\nSuid-Afrikaanse\nongeveer\nbeskou\nregering\nsedert\nverskillende\ndieselfde\nvier\nmoes\ngewoonlik\nnaby\ngemeente\ntydperk\nnou\nFrankryk\nstaan\ngroep\ngestig\nsluit\nEuropese\nverwys\nwêreld\nmoontlik\neers\nekonomiese\ngebou\nNa\nomdat\nlê\nlank\naf\ngebiede\nlande\nselfs\nMei\nTweede\nnasionale\ntans\nelke\nprovinsie\nJanuarie\nwas,\nOktober\njare\nlaaste\npersent\nseun\ninwoners\nbelangrikste\nmees\nlewe\n"
@@ -402,53 +399,4 @@ const STOP_LISTS_JSON = [
     "name": "Yoruba",
     "data": "ni\nje\nti\ntí\nó\nní\nto\nati\na\nń\norile-ede\nawon\nnínú\njẹ́\no\nninu\nàti\nsi\nGregory.\nfi\nsí\nile\ntele.\nyìí\nọdún\npé\nKàlẹ́ndà\nwon\nkan\nof\nwa\nfun\nàwon\nthe\ngba\nbi\ntó\nlati\nse\nbá\nIjoba\nAgbegbe\nn\nfún\nomo\nIbile\nsì\nmáa\nnáà\nara\nláti\ndi\nbí\nkò\nre\nIpinle\nèdè\nAare\nlo\nìlú\nNobel\nEbun\nwà\npe\nItokasi.\nwon\nàwon\nwón\nkí\nAlakoso\nàwọn\nAgba\nwón\nmo\nNaijiria\nand\nló\nwá\nohun\nilẹ̀\nde\nènìyàn\ngbogbo\nse\nodun\nijoba\ntabi\nilé\nÓ\nPope\nO\nko\nàdúgbò\njé\nso\nin\nilu\nNaijiria.\ntàbí\nlè\nonimo\ntún\nrí\noloselu\nibi\nò\nÌtumò:\nso\npè\nle\nYorùbá\ngbé\nibile\nsayensi\norin\nba\nèyí\npelu\nA\nwọn\n(ojoibi\nnígbà\ní\nNí\nyi\njé\nAwon\nmú\ndé\nÀwon\nwí\nnípa\nwọ́n\nNigeria.\ni\nìgbà\nikan\nn\ná\ntun\nrè\nogun\nAmerika\nki\nyóò\nJanuary\nÌjọ\nàwon\nwas\nIle\noluilu\nPopu\nKátólìkì\neni\nbe\nkó\nDecember\nAugust\nìtàn\nOba\nyìí.\nFebruary\ngege\nis\nolukowe\nnítorí\nede\neniyan\nagbegbe\nṣe\nÀwọn\ndá\nlori\nlo\non\nJuly\nOctober\nMarch\nòun\nGomina\nAfrika.\nMay\nApril\nmi\nilè\nona\nju\nSeptember\nayé\nKalenda\nIbujoko\nje\nlórí\nyí\nAlagba\nnomba\ne\nrè\nìdí\nigba\nAmerika.\nNovember\nNi\nlilo\nJune\nna\napa\nipinle\nThe\nomo\nOhun\npa\nJohn\nIwosan.\nOlominira\nonimosayensi\ntiti\né\ngbà\nlé\nmu\neyi\nakoko\negbe\npàtàkì\nBí\nÀsìá\norílẹ̀-èdè\nGuusu\nyìí,\nOsu\nọmọ\nnipa\nFisiksi.\nowonina\nÈdè\nAfrika\nOrile-ede\nlára\nse\nbaba\nun\nleyin\noruko\nda\nnnkan\ninú\nlarin\ngbólóhùn\nkì\nfor\nará\nri\nbéè\nFlag\nisé\nma\noko\noriki\nnáà.\nojo\ntítí\nÈyí\nbíi\nmá\nOgun\nwo\nnigba\nKemistri.\niye\nbo\nNígbà\nfaili\nà\nKomputa.\nigekurupapo\npataki\nméjì\nrè\nrẹ̀\nbàbá\njé\nas\niwe\nolori\nise\nòkè\nni.\nmìíràn\nfa\nojú\nNàìjíríà\n(ii)\nolórí\nÌtàn\nomi\nfrom\nibè\nÌpínlẹ̀\ntẹ́lẹ̀.\nAriwa\nbere\nlò\norí\nan\nnì\nÌdí\n"
   }
-];
-/* eslint-enable */
-const MAX_LINK_DENSITY_DEFAULT = 0.2;
-const LENGTH_LOW_DEFAULT = 70;
-const LENGTH_HIGH_DEFAULT = 200;
-const STOPWORDS_LOW_DEFAULT = 0.30;
-const STOPWORDS_HIGH_DEFAULT = 0.32;
-const NO_HEADINGS_DEFAULT = false;
-const MAX_HEADING_DISTANCE_DEFAULT = 200;
-
-export default function main(htmlText, language = '', format = 'default', options = {
-  lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
-  stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
-  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
-  noHeadings: NO_HEADINGS_DEFAULT,
-}) {
-  const core = new Core();
-  const presenter = new Presenter();
-  let stopwordsLow = options.stopwordsLow;
-  let stopwordsHigh = options.stopwordsHigh;
-  let stoplist = [];
-  // read stoplist file by language
-  if (language !== '') {
-    const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
-    if (isExist && isExist.data) {
-      stoplist = isExist.data.split('\n');
-    }
-  } else {
-    // empty stoplist, switch to language-independent mode
-    console.warn('No stoplist specified.');
-    stopwordsHigh = 0;
-    stopwordsLow = 0;
-  }
-
-  const paragrahps = core.jusText(htmlText, stoplist, options.lengthLow, options.lengthHigh,
-    stopwordsLow, stopwordsHigh, options.maxLinkDensity,
-    options.maxHeadingDistance, options.noHeadings);
-  switch (format) {
-    case 'default':
-      return presenter.defaultOuptut(paragrahps);
-    case 'boilerplate':
-      return presenter.defaultOuptut(paragrahps, false);
-    case 'detailed':
-      return presenter.detailOuptut(paragrahps);
-    case 'krdwrd':
-      return presenter.krdwrdOuptut(paragrahps);
-    default:
-      throw new Error('Unknown format');
-  }
-}
+]
