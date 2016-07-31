@@ -3,25 +3,13 @@ import entities from 'html-entities';
 import ParagraphMaker from './ParagraphMaker';
 import Paragraph from './Paragraph.js';
 
-const MAX_LINK_DENSITY_DEFAULT = 0.2;
-const LENGTH_LOW_DEFAULT = 70;
-const LENGTH_HIGH_DEFAULT = 200;
-const STOPWORDS_LOW_DEFAULT = 0.30;
-const STOPWORDS_HIGH_DEFAULT = 0.32;
-const NO_HEADINGS_DEFAULT = false;
-const MAX_HEADING_DISTANCE_DEFAULT = 200;
-
-// const CHARSET_META_TAG_PATTERN = /<meta[^>]+charset=["']?([^'"/>\s]+)/i;
-
 class Core {
   /**
    * Converts an HTML page into a list of classified paragraphs. Each paragraph
    * is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
    **/
-  jusText(htmlText, stoplist = [], lengthLow = LENGTH_LOW_DEFAULT,
-    lengthHigh = LENGTH_HIGH_DEFAULT, stopwordsLow = STOPWORDS_LOW_DEFAULT,
-    stopwordsHigh = STOPWORDS_HIGH_DEFAULT, maxLinkDensity = MAX_LINK_DENSITY_DEFAULT,
-    maxHeadingDistance = MAX_HEADING_DISTANCE_DEFAULT, noHeadings = NO_HEADINGS_DEFAULT) {
+  jusText(htmlText, stoplist = [], lengthLow, lengthHigh, stopwordsLow,
+    stopwordsHigh, maxLinkDensity, maxHeadingDistance, noHeadings) {
     const cleanHtml = this.preprocessor(htmlText, {
       head: true,
       footer: true,
@@ -31,7 +19,8 @@ class Core {
       comment: true,
     });
     const htmlDocument = this.htmlToDom(cleanHtml);
-    let paragraphs = ParagraphMaker.makeParagraphs(htmlDocument);
+    const maker = new ParagraphMaker();
+    let paragraphs = maker.makeParagraphs(htmlDocument);
     paragraphs = this.classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh,
       stopwordsLow, stopwordsHigh, maxLinkDensity, noHeadings);
     paragraphs = this.reviseParagraphClassification(paragraphs, maxHeadingDistance);
@@ -42,10 +31,8 @@ class Core {
   /**
    * Context-free paragraph classification.
    **/
-  classifyParagraphs(paragraphs = [Paragraph], stoplist = [], lengthLow = LENGTH_LOW_DEFAULT,
-    lengthHigh = LENGTH_HIGH_DEFAULT, stopwordsLow = STOPWORDS_LOW_DEFAULT,
-    stopwordsHigh = STOPWORDS_HIGH_DEFAULT, maxLinkDensity = MAX_LINK_DENSITY_DEFAULT,
-    maxHeadingDistance = MAX_HEADING_DISTANCE_DEFAULT, noHeadings = NO_HEADINGS_DEFAULT) {
+  classifyParagraphs(paragraphs = [Paragraph], stoplist = [], lengthLow,
+    lengthHigh, stopwordsLow, stopwordsHigh, maxLinkDensity, maxHeadingDistance, noHeadings) {
     // use cache some string function
     const search = String.prototype.search;
     const indexOf = String.prototype.indexOf;
@@ -94,7 +81,7 @@ class Core {
    * has already been called.
    **/
   reviseParagraphClassification(paragraphs = [Paragraph],
-    maxHeadingDistance = MAX_HEADING_DISTANCE_DEFAULT) {
+    maxHeadingDistance) {
     const reviseParagraphs = [];
     // copy classes
     for (const paragraph of paragraphs) {
@@ -112,7 +99,7 @@ class Core {
             reviseParagraphs[counter].classType = 'neargood';
             break;
           }
-          distance += reviseParagraphs[counter].len();
+          distance += reviseParagraphs[counter].text().length;
           counter++;
         }
       }
@@ -156,9 +143,9 @@ class Core {
         const prevNeighbour = this.getPrevNeighbour(index, reviseParagraphs, true);
         const nextNeighbour = this.getNextNeighbour(index, reviseParagraphs, true);
         if (prevNeighbour === 'bad' && nextNeighbour === 'bad') {
-          reviseParagraphs[index] = 'bad';
+          reviseParagraphs[index].classType = 'bad';
         } else {
-          reviseParagraphs[index] = 'good';
+          reviseParagraphs[index].classType = 'good';
         }
       }
     });
@@ -173,12 +160,11 @@ class Core {
             reviseParagraphs[counter].classType = 'good';
             break;
           }
-          distance += reviseParagraphs[counter].len();
+          distance += reviseParagraphs[counter].text().length;
           counter++;
         }
       }
     });
-
     return paragraphs;
   }
 

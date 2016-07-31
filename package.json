@@ -57,11 +57,12 @@
     "webpack-stream": "^3.1.0"
   },
   "babelBoilerplateOptions": {
-    "entryFileName": "Core.js",
+    "entryFileName": "index.js",
     "mainVarName": "justext"
   },
   "dependencies": {
     "html-entities": "^1.2.0",
-    "htmlparser": "^1.7.7"
+    "htmlparser": "^1.7.7",
+    "sprintf-js": "^1.0.3"
   }
 }

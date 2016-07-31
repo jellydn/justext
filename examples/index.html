@@ -6,11 +6,6 @@
     <title>Example</title>
     <script src='../dist/justext.js'></script>
     <script type="text/javascript">
-    var rawHtml = '<html><!-- comment --><body><h1>Header</h1>' +
-        '<!-- comment --> text<p>footer</p></body></html>';
-    var test = new justext.default();
-    test.htmlToDom(test.preprocessor(rawHtml));
-
     fetch('./examples/w3school.html', {
         method: 'get',
         headers: new Headers({
@@ -21,18 +16,13 @@
         return response.text();
     }).then(function(htmlText) {
         console.log('htmlText',htmlText);
-        // clean header of html
-        test.htmlToDom(test.preprocessor(htmlText, {
-            head: true,
-            footer: true,
-            script: true,
-            iframe: true,
-            style: true,
-            comment: true, }));
+        console.log('default format', justext.default(htmlText));
+        console.log('default boilerplate format', justext.default(htmlText, [], 'boilerplate'));
+        console.log('detailed format', justext.default(htmlText, [], 'detailed'));
+        console.log('krdwrd format', justext.default(htmlText, [], 'krdwrd'));
     }).catch(function(err) {
         console.log(err);
     });
-
   </script>
 </head>
 
