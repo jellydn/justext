@@ -22,7 +22,14 @@ class Core {
     lengthHigh = LENGTH_HIGH_DEFAULT, stopwordsLow = STOPWORDS_LOW_DEFAULT,
     stopwordsHigh = STOPWORDS_HIGH_DEFAULT, maxLinkDensity = MAX_LINK_DENSITY_DEFAULT,
     maxHeadingDistance = MAX_HEADING_DISTANCE_DEFAULT, noHeadings = NO_HEADINGS_DEFAULT) {
-    const cleanHtml = this.preprocessor(htmlText);
+    const cleanHtml = this.preprocessor(htmlText, {
+      head: true,
+      footer: true,
+      script: true,
+      iframe: true,
+      style: true,
+      comment: true,
+    });
     const htmlDocument = this.htmlToDom(cleanHtml);
     let paragraphs = ParagraphMaker.makeParagraphs(htmlDocument);
     paragraphs = this.classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh,
@@ -181,16 +188,11 @@ class Core {
    **/
   htmlToDom(rawHtml) {
     // TODO: process encode for html string
-    const htmlHandler = new htmlparser.DefaultHandler((error, dom) => {
-      if (error) {
-        console.warn(error);
-      } else {
-        console.log('dom', JSON.stringify(dom, null, 2));
-      }
-    });
+    const htmlHandler = new htmlparser.DefaultHandler();
     const htmlParser = new htmlparser.Parser(htmlHandler);
     htmlParser.parseComplete(rawHtml);
-    return htmlParser.dom;
+    console.log('DOM', htmlHandler.dom);
+    return htmlHandler.dom;
   }
 
   /**
@@ -209,7 +211,6 @@ class Core {
     }) {
     // TODO: Process XML format
     // removes script section entirely
-    console.log('options', options);
     const replace = String.prototype.replace;
     const htmlDecoding = new entities.AllHtmlEntities();
     let str = htmlDecoding.decode(rawHtml);
@@ -259,7 +260,6 @@ class Core {
     str = replace.call(str, /^\s+/, '');
     // remove trailing space
     str = replace.call(str, /\s+$/, '');
-    console.log('preprocessor', str);
     return str;
   }
 

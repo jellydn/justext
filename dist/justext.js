@@ -114,7 +114,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var maxHeadingDistance = arguments.length <= 7 || arguments[7] === undefined ? MAX_HEADING_DISTANCE_DEFAULT : arguments[7];
 	      var noHeadings = arguments.length <= 8 || arguments[8] === undefined ? NO_HEADINGS_DEFAULT : arguments[8];
 	
-	      var cleanHtml = this.preprocessor(htmlText);
+	      var cleanHtml = this.preprocessor(htmlText, {
+	        head: true,
+	        footer: true,
+	        script: true,
+	        iframe: true,
+	        style: true,
+	        comment: true
+	      });
 	      var htmlDocument = this.htmlToDom(cleanHtml);
 	      var paragraphs = _ParagraphMaker2.default.makeParagraphs(htmlDocument);
 	      paragraphs = this.classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh, stopwordsLow, stopwordsHigh, maxLinkDensity, noHeadings);
@@ -214,10 +221,112 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'reviseParagraphClassification',
 	    value: function reviseParagraphClassification() {
+	      var _this = this;
+	
 	      var paragraphs = arguments.length <= 0 || arguments[0] === undefined ? [_Paragraph2.default] : arguments[0];
 	      var maxHeadingDistance = arguments.length <= 1 || arguments[1] === undefined ? MAX_HEADING_DISTANCE_DEFAULT : arguments[1];
 	
-	      console.log(maxHeadingDistance);
+	      var reviseParagraphs = [];
+	      // copy classes
+	      var _iteratorNormalCompletion2 = true;
+	      var _didIteratorError2 = false;
+	      var _iteratorError2 = undefined;
+	
+	      try {
+	        for (var _iterator2 = paragraphs[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	          var paragraph = _step2.value;
+	
+	          paragraph.classType = paragraph.cfClass;
+	          reviseParagraphs.push(paragraph);
+	        }
+	
+	        // good headings
+	      } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	            _iterator2.return();
+	          }
+	        } finally {
+	          if (_didIteratorError2) {
+	            throw _iteratorError2;
+	          }
+	        }
+	      }
+	
+	      reviseParagraphs.forEach(function (paragraph, index) {
+	        if (paragraph.isHeading() && paragraph.classType === 'short') {
+	          var counter = index + 1;
+	          var distance = 0;
+	          while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
+	            if (reviseParagraphs[counter].classType === 'good') {
+	              reviseParagraphs[counter].classType = 'neargood';
+	              break;
+	            }
+	            distance += reviseParagraphs[counter].len();
+	            counter++;
+	          }
+	        }
+	      });
+	
+	      // classify short
+	      var newClassType = [];
+	      reviseParagraphs.forEach(function (paragraph, index) {
+	        if (paragraph.classType === 'short') {
+	          var prevNeighbour = _this.getPrevNeighbour(index, reviseParagraphs, true);
+	          var nextNeighbour = _this.getNextNeighbour(index, reviseParagraphs, true);
+	          var neighbours = [prevNeighbour];
+	          if (neighbours.indexOf(nextNeighbour) === -1) {
+	            neighbours.push(nextNeighbour);
+	          }
+	
+	          if (neighbours.length === 1 && neighbours[0] === 'good') {
+	            newClassType[index] = 'good';
+	          } else if (neighbours.length === 1 && neighbours[0] === 'bad') {
+	            newClassType[index] = 'bad';
+	          } else if (prevNeighbour === 'bad' && _this.getPrevNeighbour(index, reviseParagraphs, false) === 'neargood' || nextNeighbour === 'bad' && _this.getNextNeighbour(index, reviseParagraphs, false) === 'neargood') {
+	            newClassType[index] = 'good';
+	          } else {
+	            newClassType[index] = 'bad';
+	          }
+	        }
+	      });
+	
+	      newClassType.forEach(function (classType, index) {
+	        reviseParagraphs[index].classType = classType;
+	      });
+	
+	      // revise neargood
+	      reviseParagraphs.forEach(function (paragraph, index) {
+	        if (paragraph.classType === 'neargood') {
+	          var prevNeighbour = _this.getPrevNeighbour(index, reviseParagraphs, true);
+	          var nextNeighbour = _this.getNextNeighbour(index, reviseParagraphs, true);
+	          if (prevNeighbour === 'bad' && nextNeighbour === 'bad') {
+	            reviseParagraphs[index] = 'bad';
+	          } else {
+	            reviseParagraphs[index] = 'good';
+	          }
+	        }
+	      });
+	
+	      // more good headings
+	      reviseParagraphs.forEach(function (paragraph, index) {
+	        if (paragraph.isHeading() && paragraph.classType === 'bad' && paragraph.cfClass !== 'bad') {
+	          var counter = index + 1;
+	          var distance = 0;
+	          while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
+	            if (reviseParagraphs[counter].classType === 'good') {
+	              reviseParagraphs[counter].classType = 'good';
+	              break;
+	            }
+	            distance += reviseParagraphs[counter].len();
+	            counter++;
+	          }
+	        }
+	      });
+	
 	      return paragraphs;
 	    }
 	
@@ -230,16 +339,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'htmlToDom',
 	    value: function htmlToDom(rawHtml) {
 	      // TODO: process encode for html string
-	      var htmlHandler = new _htmlparser2.default.DefaultHandler(function (error, dom) {
-	        if (error) {
-	          console.warn(error);
-	        } else {
-	          console.log('dom', JSON.stringify(dom, null, 2));
-	        }
-	      });
+	      var htmlHandler = new _htmlparser2.default.DefaultHandler();
 	      var htmlParser = new _htmlparser2.default.Parser(htmlHandler);
 	      htmlParser.parseComplete(rawHtml);
-	      return htmlParser.dom;
+	      console.log('DOM', htmlHandler.dom);
+	      return htmlHandler.dom;
 	    }
 	
 	    /**
@@ -262,7 +366,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // TODO: Process XML format
 	      // removes script section entirely
-	      console.log('options', options);
 	      var replace = String.prototype.replace;
 	      var htmlDecoding = new _htmlEntities2.default.AllHtmlEntities();
 	      var str = htmlDecoding.decode(rawHtml);
@@ -280,7 +383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        str = replace.call(str, /<head\b[^<]*(?:(?!<\/head>)<[^<]*)*<\/head>/gi, ' ');
 	      }
 	
-	      // removes head section entirely
+	      // removes footer section entirely
 	      if (options.footer) {
 	        str = replace.call(str, /<footer\b[^<]*(?:(?!<\/footer>)<[^<]*)*<\/footer>/gi, ' ');
 	      }
@@ -310,8 +413,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	      str = replace.call(str, /^\s+/, '');
 	      // remove trailing space
 	      str = replace.call(str, /\s+$/, '');
-	      console.log('preprocessor', str);
 	      return str;
+	    }
+	
+	    /**
+	     * Get neighbour class type of paragraphs
+	     * */
+	
+	  }, {
+	    key: 'getNeighbour',
+	    value: function getNeighbour(index, paragraphs, ignoreNearGood, inc, boundary) {
+	      var checkIndex = index;
+	      while (Number(checkIndex + inc) !== Number(boundary)) {
+	        checkIndex = Number(checkIndex + inc);
+	        var classType = paragraphs[checkIndex].classType;
+	        if (['good', 'bad'].indexOf(classType) !== -1) {
+	          return classType;
+	        }
+	
+	        if (classType === 'neargood' && !ignoreNearGood) {
+	          return classType;
+	        }
+	      }
+	
+	      return 'bad';
+	    }
+	
+	    /**
+	     * Return the class of the paragraph at the top end of the short/neargood
+	     * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
+	     * can be returned, otherwise 'neargood' can be returned, too.
+	     * */
+	
+	  }, {
+	    key: 'getPrevNeighbour',
+	    value: function getPrevNeighbour(index, paragraphs, ignoreNearGood) {
+	      return this.getNeighbour(index, paragraphs, ignoreNearGood, -1, -1);
+	    }
+	
+	    /**
+	     * Return the class of the paragraph at the bottom end of the short/neargood
+	     * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
+	     * can be returned, otherwise 'neargood' can be returned, too.
+	     * */
+	
+	  }, {
+	    key: 'getNextNeighbour',
+	    value: function getNextNeighbour(index, paragraphs, ignoreNearGood) {
+	      return this.getNeighbour(index, paragraphs, ignoreNearGood, 1, paragraphs.length);
 	    }
 	  }]);
 	
@@ -1696,17 +1845,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	// const PARAGRAPH_TAGS = [
-	//   'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
-	//   'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
-	//   'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
-	//   'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-	// ];
+	var PARAGRAPH_TAGS = ['body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd', 'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option', 'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 	/**
 	 * A class for converting a HTML page represented as a DOM object into a list
 	 * of paragraphs.
 	 * @class ParagraphMaker
 	 */
+	
 	var ParagraphMaker = function () {
 	  function ParagraphMaker() {
 	    _classCallCheck(this, ParagraphMaker);
@@ -1715,7 +1860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.paragraphs = [];
 	    this.paragraph = null;
 	    this.link = false;
-	    this.br = this;
+	    this.br = false;
 	    this.startNewParagraph();
 	  }
 	
@@ -1728,15 +1873,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      this.paragraph = new _Paragraph2.default(this.path);
 	    }
+	  }, {
+	    key: 'startElementNS',
+	    value: function startElementNS(name) {
+	      this.path.append(name);
+	      if (PARAGRAPH_TAGS.indexOf(name) !== -1 || name === 'br' && this.br) {
+	        if (name === 'br') {
+	          this.paragraph.tagsCount -= 1;
+	        }
+	
+	        this.startNewParagraph();
+	      } else {
+	        this.br = name === 'br';
+	        if (name === 'a') {
+	          this.link = true;
+	        }
+	
+	        this.paragraph.tagsCount += 1;
+	      }
+	    }
+	  }, {
+	    key: 'endElementNS',
+	    value: function endElementNS(name) {
+	      this.path.pop();
+	      if (PARAGRAPH_TAGS.indexOf(name) !== -1) {
+	        this.startNewParagraph();
+	      }
+	
+	      if (name === 'a') {
+	        this.link = false;
+	      }
+	    }
+	  }, {
+	    key: 'endDocument',
+	    value: function endDocument() {
+	      this.startNewParagraph();
+	    }
+	  }, {
+	    key: 'characters',
+	    value: function characters(content) {
+	      var trim = String.prototype.trim;
+	      if (!!trim.call(content)) {
+	        this.paragraph.appendText(content);
+	        if (this.link) {
+	          this.paragraph.charsCountInLinks += this.paragraph.len();
+	        }
+	        this.br = false;
+	      }
+	    }
 	
 	    /**
-	     * Converts DOM into paragraphs.
+	     * Converts root document into paragraphs.
 	     **/
 	
 	  }, {
 	    key: 'makeParagraphs',
 	    value: function makeParagraphs(root) {
-	      console.log('root', JSON.stringify(root, null, 2));
+	      console.log(root);
 	      return this.paragraphs;
 	    }
 	  }]);
