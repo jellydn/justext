@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="./demo/css/style.css" />
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="./dist/justext.js"></script>
+    <title>jusText demo</title>
+</head>
+
+<body id="app">
+    <h1> {{ name }} </h1>
+    <div class="description">
+        jusText is a heuristic based boilerplate removal tool.
+    </div>
+    <form>
+        <fieldset>
+            <div id="basic_options">
+                <table>
+                    <!--TODO: need to parse content by url later-->
+                    <!--<tr>
+                        <td class="label">URL</td>
+                        <td><input v-model="url" name="url" type="text" value="" class="wide" /></td>
+                    </tr>-->
+                    <tr>
+                        <td class="label">Web Content</td>
+                        <td><textarea v-model="content" name="content" cols="40" rows="5" /></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Language</td>
+                        <td>
+                            <select v-model="language" name="language" />
+                            <option value="-Any_language-">-Any language-</option>
+                            <option value="Afrikaans">Afrikaans</option>
+                            <option value="Albanian">Albanian</option>
+                            <option value="Amharic">Amharic</option>
+                            <option value="Arabic">Arabic</option>
+                            <option value="Aragonese">Aragonese</option>
+                            <option value="Armenian">Armenian</option>
+                            <option value="Aromanian">Aromanian</option>
+                            <option value="Asturian">Asturian</option>
+                            <option value="Azerbaijani">Azerbaijani</option>
+                            <option value="Basque">Basque</option>
+                            <option value="Belarusian">Belarusian</option>
+                            <option value="Belarusian_Taraskievica">Belarusian Taraskievica</option>
+                            <option value="Bengali">Bengali</option>
+                            <option value="Bishnupriya_Manipuri">Bishnupriya Manipuri</option>
+                            <option value="Bosnian">Bosnian</option>
+                            <option value="Breton">Breton</option>
+                            <option value="Bulgarian">Bulgarian</option>
+                            <option value="Catalan">Catalan</option>
+                            <option value="Cebuano">Cebuano</option>
+                            <option value="Chuvash">Chuvash</option>
+                            <option value="Croatian">Croatian</option>
+                            <option value="Czech">Czech</option>
+                            <option value="Danish">Danish</option>
+                            <option value="Dutch">Dutch</option>
+                            <option value="English">English</option>
+                            <option value="Esperanto">Esperanto</option>
+                            <option value="Estonian">Estonian</option>
+                            <option value="Finnish">Finnish</option>
+                            <option value="French">French</option>
+                            <option value="Galician">Galician</option>
+                            <option value="Georgian">Georgian</option>
+                            <option value="German">German</option>
+                            <option value="Greek">Greek</option>
+                            <option value="Gujarati">Gujarati</option>
+                            <option value="Haitian">Haitian</option>
+                            <option value="Hebrew">Hebrew</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Hungarian">Hungarian</option>
+                            <option value="Icelandic">Icelandic</option>
+                            <option value="Ido">Ido</option>
+                            <option value="Igbo">Igbo</option>
+                            <option value="Indonesian">Indonesian</option>
+                            <option value="Irish">Irish</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Javanese">Javanese</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="Kazakh">Kazakh</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Kurdish">Kurdish</option>
+                            <option value="Kyrgyz">Kyrgyz</option>
+                            <option value="Latin">Latin</option>
+                            <option value="Latvian">Latvian</option>
+                            <option value="Lithuanian">Lithuanian</option>
+                            <option value="Lombard">Lombard</option>
+                            <option value="Low_Saxon">Low Saxon</option>
+                            <option value="Luxembourgish">Luxembourgish</option>
+                            <option value="Macedonian">Macedonian</option>
+                            <option value="Malay">Malay</option>
+                            <option value="Malayalam">Malayalam</option>
+                            <option value="Maltese">Maltese</option>
+                            <option value="Marathi">Marathi</option>
+                            <option value="Neapolitan">Neapolitan</option>
+                            <option value="Nepali">Nepali</option>
+                            <option value="Newar">Newar</option>
+                            <option value="Norwegian_Bokmal">Norwegian Bokmal</option>
+                            <option value="Norwegian_Bokmal_Nynorsk_joined">Norwegian Bokmal Nynorsk joined</option>
+                            <option value="Norwegian_Nynorsk">Norwegian Nynorsk</option>
+                            <option value="Occitan">Occitan</option>
+                            <option value="Persian">Persian</option>
+                            <option value="Piedmontese">Piedmontese</option>
+                            <option value="Polish">Polish</option>
+                            <option value="Portuguese">Portuguese</option>
+                            <option value="Quechua">Quechua</option>
+                            <option value="Romanian">Romanian</option>
+                            <option value="Russian">Russian</option>
+                            <option value="Samogitian">Samogitian</option>
+                            <option value="Serbian">Serbian</option>
+                            <option value="Serbo_Croatian">Serbo Croatian</option>
+                            <option value="Sicilian">Sicilian</option>
+                            <option value="Simple_English">Simple English</option>
+                            <option value="Slovak">Slovak</option>
+                            <option value="Slovenian">Slovenian</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="Sundanese">Sundanese</option>
+                            <option value="Swahili">Swahili</option>
+                            <option value="Swedish">Swedish</option>
+                            <option value="Tagalog">Tagalog</option>
+                            <option value="Tamil">Tamil</option>
+                            <option value="Telugu">Telugu</option>
+                            <option value="Turkish">Turkish</option>
+                            <option value="Turkmen">Turkmen</option>
+                            <option value="Ukrainian">Ukrainian</option>
+                            <option value="Urdu">Urdu</option>
+                            <option value="Uzbek">Uzbek</option>
+                            <option value="Vietnamese">Vietnamese</option>
+                            <option value="Volapuk">Volapuk</option>
+                            <option value="Walloon">Walloon</option>
+                            <option value="Waray_Waray">Waray Waray</option>
+                            <option value="Welsh">Welsh</option>
+                            <option value="West_Frisian">West Frisian</option>
+                            <option value="Western_Panjabi">Western Panjabi</option>
+                            <option value="Yoruba">Yoruba</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="advanced_options" v-show="isShow">
+                <hr/>
+                <table>
+                    <tr>
+                        <td>No headings</td>
+                        <td><input v-model="options.noHeadings" type="checkbox" name="no_headings" /></td>
+                    </tr>
+                    <tr>
+                        <td>Max heading distance</td>
+                        <td><input v-model="options.maxHeadingDistance" name="max_heading_distance" type="text" value="200" /></td>
+                    </tr>
+                    <tr>
+                        <td>Length low</td>
+                        <td><input v-model="options.lengthLow" name="length_low" type="text" value="70" /></td>
+                    </tr>
+                    <tr>
+                        <td>Length high</td>
+                        <td><input v-model="options.lengthHight" name="length_high" type="text" value="200" /></td>
+                    </tr>
+                    <tr>
+                        <td>Stopwords low</td>
+                        <td><input v-model="options.stopwordsLow" name="stopwords_low" type="text" value="0.3" /></td>
+                    </tr>
+                    <tr>
+                        <td>Stopwords high</td>
+                        <td><input v-model="options.stopwordsHigh" name="stopwords_high" type="text" value="0.32" /></td>
+                    </tr>
+                    <tr>
+                        <td>Max link density</td>
+                        <td><input v-model="options.maxLinkDesity" name="max_link_density" type="text" value="0.2" /></td>
+                    </tr>
+                </table>
+            </div>
+            <hr/>
+            <div>
+                <input name="Submit" value="Sumit" type="button" id="submit" v-on:click="parseText" /></input>
+                <a v-if="isShow" v-on:click="toggleShow">Hide advanced options</a>
+                <a v-else v-on:click="toggleShow">Show advanced options</a>
+            </div>
+        </fieldset>
+    </form>
+    <div v-if="defaultFormatResult !== ''">
+        <h3>Default format</h3>
+        <pre>{{defaultFormatResult}}</pre>
+    </div>
+    <div v-if="defaultBoilerPlatFormatResult !== ''">
+        <h3>Default Boiler Plate format</h3>
+        <pre>{{defaultBoilerPlatFormatResult}}</pre>
+    </div>
+    <div v-if="detailedFormatResult !== ''">
+        <h3>Detailed format</h3>
+        <pre>{{detailedFormatResult}}</pre>
+    </div>
+    <div v-if="krdwrdFormatResult !== ''">
+        <h3>Krdwrd format</h3>
+        </pre>{{krdwrdFormatResult}}</pre>
+    </div>
+    <script src="./demo/js/app.js"></script>
+</body>
+
+</html>

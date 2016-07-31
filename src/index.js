@@ -424,7 +424,7 @@ export default function main(htmlText, language = '', format = 'default', option
   let stopwordsHigh = options.stopwordsHigh;
   let stoplist = [];
   // read stoplist file by language
-  if (language !== '') {
+  if (language.length > 0) {
     const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
     if (isExist && isExist.data) {
       stoplist = isExist.data.split('\n');
