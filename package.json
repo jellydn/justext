@@ -4,6 +4,7 @@
   "description": "Program jusText is a tool for removing boilerplate content, such as navigation links, headers, and footers from HTML pages.",
   "main": "dist/justext.js",
   "scripts": {
+    "demo": "lite-server",
     "test": "gulp",
     "lint": "gulp lint",
     "test-browser": "gulp test-browser",
@@ -52,6 +53,7 @@
     "gulp-uglify": "^1.5.1",
     "isparta": "^4.0.0",
     "json-loader": "^0.5.3",
+    "lite-server": "^2.2.2",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",

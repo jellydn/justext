@@ -1,0 +1,6 @@
+{
+    "files" : "./**/*.{js, html, css}",
+    "server" : { "baseDir" : "./" },
+    "port": 8000,
+    "browser" : ["google-chrome", "firefox"]
+}
