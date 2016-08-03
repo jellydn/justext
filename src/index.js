@@ -1,3 +1,4 @@
+import entities from 'html-entities';
 import Core from './Core.js';
 import Presenter from './Presenter.js';
 /* eslint-disable */
@@ -469,4 +470,9 @@ export function url(externalUrl, language = '', format = 'default', options = {
   }).catch((error) => {
     throw error;
   });
+}
+
+export function decode(text) {
+  const htmlDecoding = new entities.AllHtmlEntities();
+  return htmlDecoding.decode(text);
 }

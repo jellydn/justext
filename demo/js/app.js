@@ -52,6 +52,7 @@ var JustextItemComponent = Vue.extend({
 
     self.heading = Number(self.heading) > 0;
     self.text = self.item.substr(textPos + 1);
+    self.text = justext.decode(self.text);
     if (self.class === 'good' && self.heading) {
       self.class = 'heading';
     }
