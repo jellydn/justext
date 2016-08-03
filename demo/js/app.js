@@ -112,7 +112,12 @@ var app = new Vue({
         else {
           this.output = justext.rawHtml(this.content, this.language, 'detailed', this.options);
         }
-        this.output = this.output.split('\r\n');
+
+        if (this.output) {
+          this.output = this.output.split('\r\n');
+        } else {
+          this.output = [];
+        }
       }
     }
   }
