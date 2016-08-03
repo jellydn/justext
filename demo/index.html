@@ -18,11 +18,10 @@
         <fieldset>
             <div id="basic_options">
                 <table>
-                    <!--TODO: need to parse content by url later-->
-                    <!--<tr>
+                    <tr>
                         <td class="label">URL</td>
                         <td><input v-model="url" name="url" type="text" value="" class="wide" /></td>
-                    </tr>-->
+                    </tr>
                     <tr>
                         <td class="label">Web Content</td>
                         <td><textarea v-model="content" name="content" cols="40" rows="5" /></textarea>
@@ -157,7 +156,7 @@
                     </tr>
                     <tr>
                         <td>Length high</td>
-                        <td><input v-model="options.lengthHight" name="length_high" type="text" value="200" /></td>
+                        <td><input v-model="options.lengthHigh" name="length_high" type="text" value="200" /></td>
                     </tr>
                     <tr>
                         <td>Stopwords low</td>
@@ -181,21 +180,10 @@
             </div>
         </fieldset>
     </form>
-    <div v-if="defaultFormatResult !== ''">
-        <h3>Default format</h3>
-        <pre>{{defaultFormatResult}}</pre>
-    </div>
-    <div v-if="defaultBoilerPlatFormatResult !== ''">
-        <h3>Default Boiler Plate format</h3>
-        <pre>{{defaultBoilerPlatFormatResult}}</pre>
-    </div>
-    <div v-if="detailedFormatResult !== ''">
-        <h3>Detailed format</h3>
-        <pre>{{detailedFormatResult}}</pre>
-    </div>
-    <div v-if="krdwrdFormatResult !== ''">
-        <h3>Krdwrd format</h3>
-        </pre>{{krdwrdFormatResult}}</pre>
+    <div class="output_wrapper" v-if="output.length > 0">
+        <a v-if="isShowBoiler" v-on:click="isShowBoiler=false">Hide boilerplate</a>
+        <a v-else v-on:click="isShowBoiler=true;">Show boilerplate</a>
+        <justext-result :is-boiler="isShowBoiler" :items="output"></justext-result>
     </div>
     <script src="./js/app.js"></script>
 </body>

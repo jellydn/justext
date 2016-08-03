@@ -65,6 +65,7 @@
     "mainVarName": "justext"
   },
   "dependencies": {
+    "axios": "^0.13.1",
     "html-entities": "^1.2.0",
     "htmlparser": "^1.7.7",
     "sprintf-js": "^1.0.3"

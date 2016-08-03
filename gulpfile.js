@@ -62,7 +62,9 @@ function build() {
       //   jquery: true
       // }
       // would externalize the `jquery` module.
-      externals: {},
+      externals: {
+        // request: true
+      },
       module: {
         loaders: [
           { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }

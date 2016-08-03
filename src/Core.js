@@ -1,9 +1,23 @@
 import htmlparser from 'htmlparser';
 import entities from 'html-entities';
+import axios from 'axios';
 import ParagraphMaker from './ParagraphMaker';
 import Paragraph from './Paragraph.js';
 
 class Core {
+
+  getHtmlOfUrl(url) {
+    const request = axios.create({
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Origin': '*',
+      },
+      withCredentials: true,
+    });
+    return request.get(url);
+  }
+
   /**
    * Converts an HTML page into a list of classified paragraphs. Each paragraph
    * is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -80,8 +94,7 @@ class Core {
    * Context-sensitive paragraph classification. Assumes that classify_pragraphs
    * has already been called.
    **/
-  reviseParagraphClassification(paragraphs = [Paragraph],
-    maxHeadingDistance) {
+  reviseParagraphClassification(paragraphs, maxHeadingDistance) {
     const reviseParagraphs = [];
     // copy classes
     for (const paragraph of paragraphs) {
@@ -96,7 +109,7 @@ class Core {
         let distance = 0;
         while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
           if (reviseParagraphs[counter].classType === 'good') {
-            reviseParagraphs[counter].classType = 'neargood';
+            reviseParagraphs[index].classType = 'neargood';
             break;
           }
           distance += reviseParagraphs[counter].text().length;
@@ -157,7 +170,7 @@ class Core {
         let distance = 0;
         while (counter < reviseParagraphs.length && distance <= maxHeadingDistance) {
           if (reviseParagraphs[counter].classType === 'good') {
-            reviseParagraphs[counter].classType = 'good';
+            reviseParagraphs[index].classType = 'good';
             break;
           }
           distance += reviseParagraphs[counter].text().length;

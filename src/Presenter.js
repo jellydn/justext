@@ -42,14 +42,25 @@ class Presenter {
     const htmlDecoding = new entities.AllHtmlEntities();
 
     paragraphs.forEach((paragraph) => {
-      result.push(sprintf.sprintf('<p class="%s" cfclass="%s" heading="%i" xpath="%s"> %s',
+      const format = '<p class="%s" cfclass="%s" heading="%i" xpath="%s"' +
+        ' length="%i" charsCountInLinks="%i" linksDesity="%i"' +
+        ' wordsCount="%i" stopwordDesity="%i" stopwordsCount="%i"> %s';
+      result.push(sprintf.sprintf(
+        format,
         paragraph.classType,
         paragraph.cfClass,
         Number(paragraph.isHeading(), 10),
         paragraph.xpath,
+        Number(paragraph.len(), 10),
+        paragraph.charsCountInLinks,
+        Number(paragraph.linksDesity(), 10),
+        Number(paragraph.wordsCount(), 10),
+        Number(paragraph.stopwordDesity(), 10),
+        Number(paragraph.stopwordsCount(), 10),
         htmlDecoding.encode(paragraph.text())
       ));
     });
+    console.log('result', result);
     return result.join('\r\n');
   }
 

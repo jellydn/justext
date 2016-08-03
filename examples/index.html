@@ -6,7 +6,7 @@
     <title>Example</title>
     <script src='../dist/justext.js'></script>
     <script type="text/javascript">
-    fetch('./examples/w3school.html', {
+    fetch('./w3school.html', {
         method: 'get',
         headers: new Headers({
             'Content-Type': 'text/plain'
@@ -16,10 +16,10 @@
         return response.text();
     }).then(function(htmlText) {
         console.log('htmlText',htmlText);
-        console.log('default format', justext.default(htmlText, 'English'));
-        console.log('default boilerplate format', justext.default(htmlText, 'English', 'boilerplate'));
-        console.log('detailed format', justext.default(htmlText, 'English', 'detailed'));
-        console.log('krdwrd format', justext.default(htmlText, 'English', 'krdwrd'));
+        console.log('default format', justext.rawHtml(htmlText, 'English'));
+        console.log('default boilerplate format', justext.rawHtml(htmlText, 'English', 'boilerplate'));
+        console.log('detailed format', justext.rawHtml(htmlText, 'English', 'detailed'));
+        console.log('krdwrd format', justext.rawHtml(htmlText, 'English', 'krdwrd'));
     }).catch(function(err) {
         console.log(err);
     });

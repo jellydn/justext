@@ -412,12 +412,13 @@ const STOPWORDS_HIGH_DEFAULT = 0.32;
 const NO_HEADINGS_DEFAULT = false;
 const MAX_HEADING_DISTANCE_DEFAULT = 200;
 
-export default function main(htmlText, language = '', format = 'default', options = {
+export function rawHtml(htmlText, language = '', format = 'default', options = {
   lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
   stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
   maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
   noHeadings: NO_HEADINGS_DEFAULT,
 }) {
+  console.log('options', options);
   const core = new Core();
   const presenter = new Presenter();
   let stopwordsLow = options.stopwordsLow;
@@ -451,4 +452,20 @@ export default function main(htmlText, language = '', format = 'default', option
     default:
       throw new Error('Unknown format');
   }
+}
+
+
+export function url(externalUrl, language = '', format = 'default', options = {
+  lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
+  stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
+  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
+  noHeadings: NO_HEADINGS_DEFAULT,
+}) {
+  const core = new Core();
+  core.getHtmlOfUrl(externalUrl).then((response) => {
+    const htmlText = response.data;
+    return rawHtml(htmlText, language, format, options);
+  }).catch((error) => {
+    throw error;
+  });
 }

@@ -17,7 +17,7 @@ class Paragraph {
 
   isHeading() {
     const re = /\bh\d\b/;
-    return this.domPath.search(re);
+    return this.domPath.search(re) !== -1;
   }
 
   isBoilerplate() {

@@ -32,19 +32,16 @@ p.good, p.heading {
 }
 
 p.bad {
-/*    color: #f00;*/
     background-color: #fdd;
-    font-size: 70%%;
 }
 
-div#output_wrapper {
+div.output_wrapper {
     width: 800px;
 }
 
 div.paragraph_details {
-    width: 240px;
     float: right;
-    display: none;
+    width: 240px;
 }
 
 div.paragraph_details table {
