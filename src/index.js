@@ -418,7 +418,6 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
   maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
   noHeadings: NO_HEADINGS_DEFAULT,
 }) {
-  console.log('options', options);
   const core = new Core();
   const presenter = new Presenter();
   let stopwordsLow = options.stopwordsLow;
@@ -426,9 +425,11 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
   let stoplist = [];
   // read stoplist file by language
   if (language.length > 0) {
+    console.log('language', language);
     const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
-    if (isExist && isExist.data) {
-      stoplist = isExist.data.split('\n');
+    if (isExist && isExist[0] && isExist[0].data) {
+      stoplist = isExist[0].data.split('\n');
+      console.log('stoplist', stoplist);
     }
   } else {
     // empty stoplist, switch to language-independent mode
