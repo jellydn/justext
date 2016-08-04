@@ -37,14 +37,14 @@ class Presenter {
    * Same as output_default, but only <p> tags are used and the following
    * attributes are added: class, cfclass and heading.
    * */
-  detailOuptut(paragraphs) {
+  detailOuptut(paragraphs, stopwords = []) {
     const result = [];
     const htmlDecoding = new entities.AllHtmlEntities();
 
     paragraphs.forEach((paragraph) => {
       const format = '<p class="%s" cfclass="%s" heading="%i" xpath="%s"' +
         ' length="%i" charsCountInLinks="%i" linksDesity="%i"' +
-        ' wordsCount="%i" stopwordDesity="%i" stopwordsCount="%i"> %s';
+        ' wordsCount="%i" stopwordDesity="%f" stopwordsCount="%i"> %s';
       result.push(sprintf.sprintf(
         format,
         paragraph.classType,
@@ -55,8 +55,8 @@ class Presenter {
         paragraph.charsCountInLinks,
         Number(paragraph.linksDesity(), 10),
         Number(paragraph.wordsCount(), 10),
-        Number(paragraph.stopwordDesity(), 10),
-        Number(paragraph.stopwordsCount(), 10),
+        Number(paragraph.stopwordDesity(stopwords), 10),
+        Number(paragraph.stopwordsCount(stopwords), 10),
         htmlDecoding.encode(paragraph.text())
       ));
     });

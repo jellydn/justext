@@ -448,7 +448,7 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
     case 'boilerplate':
       return presenter.defaultOuptut(paragrahps, false);
     case 'detailed':
-      return presenter.detailOuptut(paragrahps);
+      return presenter.detailOuptut(paragrahps, stoplist);
     case 'krdwrd':
       return presenter.krdwrdOuptut(paragrahps);
     default:

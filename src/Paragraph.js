@@ -58,8 +58,13 @@ class Paragraph {
   stopwordsCount(stopwords = []) {
     let count = 0;
     for (const word of this.text().split(' ')) {
-      if (stopwords.indexOf(word.toLowerCase()) !== -1) {
-        count++;
+      const isFound = stopwords.indexOf(word.toLowerCase());
+      if (isFound !== -1) {
+        // check for special case
+        // such as, word=cross and we have 'across' in stopwords
+        if (word === stopwords[isFound]) {
+          count++;
+        }
       }
     }
     return count;
@@ -70,7 +75,6 @@ class Paragraph {
     if (count === 0) {
       return 0;
     }
-
     return this.stopwordsCount(stopwords) / count;
   }
 
