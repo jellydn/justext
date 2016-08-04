@@ -1,3 +1,4 @@
+import S from 'string';
 import entities from 'html-entities';
 import Core from './Core.js';
 import Presenter from './Presenter.js';
@@ -413,6 +414,17 @@ const STOPWORDS_HIGH_DEFAULT = 0.32;
 const NO_HEADINGS_DEFAULT = false;
 const MAX_HEADING_DISTANCE_DEFAULT = 200;
 
+export function stoplistBy(language) {
+  console.log('language', language);
+  const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
+  let result = [];
+  if (isExist && isExist[0] && isExist[0].data) {
+    result = new S(isExist[0].data).lines();
+  }
+  console.log('stoplistBy', result);
+  return result;
+}
+
 export function rawHtml(htmlText, language = '', format = 'default', options = {
   lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
   stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
@@ -426,12 +438,7 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
   let stoplist = [];
   // read stoplist file by language
   if (language.length > 0) {
-    console.log('language', language);
-    const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
-    if (isExist && isExist[0] && isExist[0].data) {
-      stoplist = isExist[0].data.split('\n');
-      console.log('stoplist', stoplist);
-    }
+    stoplist = stoplistBy(language);
   } else {
     // empty stoplist, switch to language-independent mode
     console.warn('No stoplist specified.');

@@ -60,11 +60,7 @@ class Paragraph {
     for (const word of this.text().split(' ')) {
       const isFound = stopwords.indexOf(word.toLowerCase());
       if (isFound !== -1) {
-        // check for special case
-        // such as, word=cross and we have 'across' in stopwords
-        if (word === stopwords[isFound]) {
-          count++;
-        }
+        count++;
       }
     }
     return count;

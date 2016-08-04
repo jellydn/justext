@@ -2,7 +2,7 @@
 
 // define
 var JustextItemComponent = Vue.extend({
-  template: `<p v-if='isBoiler || class !== "bad"' v-on:mouseenter="isShow=true;" v-on:mouseleave="isShow=false;" class={{class}}>{{text}}</p>
+  template: `<p v-if='isBoiler || cssclass !== "bad"' v-on:mouseenter="isShow=true;" v-on:mouseleave="isShow=false;" class={{cssclass}}>{{text}}</p>
             <div class="paragraph_details {{class}}">
             <table v-if=isShow>
             <tbody><tr class="odd"><td class="attr">final class</td><td class="value">{{class}}</td></tr>
@@ -22,6 +22,7 @@ var JustextItemComponent = Vue.extend({
     return {
       isShow: false,
       text: '',
+      cssclass: '',
       class: '',
       cfclass: '',
       heading: false,
@@ -54,7 +55,9 @@ var JustextItemComponent = Vue.extend({
     self.text = self.item.substr(textPos + 1);
     self.text = justext.decode(self.text);
     if (self.class === 'good' && self.heading) {
-      self.class = 'heading';
+      self.cssclass = 'heading';
+    } else {
+      self.cssclass = self.class;
     }
 
     done();
