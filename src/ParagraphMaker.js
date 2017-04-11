@@ -1,5 +1,6 @@
 import PathInfo from './PathInfo.js';
 import Paragraph from './Paragraph.js';
+import * as logger from 'loglevel';
 
 const PARAGRAPH_TAGS = [
   'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
@@ -96,7 +97,7 @@ class ParagraphMaker {
    **/
   makeParagraphs(root) {
     this.parseHtmlDocument(root);
-    console.log('makeParagraphs', this.paragraphs);
+    logger.debug('makeParagraphs', this.paragraphs);
     return this.paragraphs;
   }
 }

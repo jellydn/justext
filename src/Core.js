@@ -1,6 +1,7 @@
 import htmlparser from 'htmlparser';
 import entities from 'html-entities';
 import axios from 'axios';
+import * as logger from 'loglevel';
 import ParagraphMaker from './ParagraphMaker';
 import Paragraph from './Paragraph.js';
 
@@ -190,7 +191,7 @@ class Core {
     const htmlHandler = new htmlparser.DefaultHandler();
     const htmlParser = new htmlparser.Parser(htmlHandler);
     htmlParser.parseComplete(rawHtml);
-    console.log('DOM', htmlHandler.dom);
+    logger.debug('DOM', htmlHandler.dom);
     return htmlHandler.dom;
   }
 
@@ -245,6 +246,7 @@ class Core {
     }
 
     // remove all remaining tags
+    /* eslint-disable no-useless-escape */
     if (options.html) {
       str = replace.call(str,
         /<\/?[a-z]+(?:\s[a-z0-9]+(\s*=\s*('.*?'|".*?"|\d+))?)*[\s\/]*>/gm,

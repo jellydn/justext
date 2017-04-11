@@ -1,5 +1,6 @@
 const fsx = require('fs-extra');
 const jetpack = require('fs-jetpack');
+const logger = require('loglevel');
 
 const items = [];
 fsx.walk('./src/stoplists')
@@ -17,8 +18,8 @@ fsx.walk('./src/stoplists')
   .on('end', () => {
     fsx.outputJson('./src/stoplists.json', items, (err) => {
       if (err) {
-        console.warn(err);
+        logger.warn(err);
       }
     });
-    console.log('done');
+    logger.info('done');
   });

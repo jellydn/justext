@@ -1,5 +1,6 @@
 import sprintf from 'sprintf-js';
 import entities from 'html-entities';
+import * as logger from 'loglevel';
 
 class Presenter {
 
@@ -60,7 +61,7 @@ class Presenter {
         htmlDecoding.encode(paragraph.text())
       ));
     });
-    console.log('result', result);
+    logger.debug('result', result);
     return result.join('\r\n');
   }
 

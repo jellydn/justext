@@ -1,8 +1,8 @@
-
+import * as logger from 'loglevel';
 class Utils {
 
   constructor() {
-    console.log('Utils');
+    logger.info('Utils');
   }
 
 }

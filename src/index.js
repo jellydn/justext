@@ -1,5 +1,6 @@
 import S from 'string';
 import entities from 'html-entities';
+import * as logger from 'loglevel';
 import Core from './Core.js';
 import Presenter from './Presenter.js';
 /* eslint-disable */
@@ -415,13 +416,13 @@ const NO_HEADINGS_DEFAULT = false;
 const MAX_HEADING_DISTANCE_DEFAULT = 200;
 
 export function stoplistBy(language) {
-  console.log('language', language);
+  logger.debug('language', language);
   const isExist = STOP_LISTS_JSON.filter(item => item.name === language);
   let result = [];
   if (isExist && isExist[0] && isExist[0].data) {
     result = new S(isExist[0].data).lines();
   }
-  console.log('stoplistBy', result);
+  logger.debug('stoplistBy', result);
   return result;
 }
 
@@ -441,7 +442,7 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
     stoplist = stoplistBy(language);
   } else {
     // empty stoplist, switch to language-independent mode
-    console.warn('No stoplist specified.');
+    logger.warn('No stoplist specified.');
     stopwordsHigh = 0;
     stopwordsLow = 0;
   }
