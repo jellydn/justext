@@ -12,7 +12,7 @@ class Presenter {
    * where <tag> is <p>, <h> or <b> which indicates
    * standard paragraph, heading or boilerplate respecitvely.
    * */
-  defaultOuptut(paragraphs, noBoilerPlate = true) {
+  static defaultOuptut(paragraphs, noBoilerPlate = true) {
     const result = [];
     const htmlDecoding = new entities.AllHtmlEntities();
 
@@ -38,7 +38,7 @@ class Presenter {
    * Same as output_default, but only <p> tags are used and the following
    * attributes are added: class, cfclass and heading.
    * */
-  detailOuptut(paragraphs, stopwords = []) {
+  static detailOuptut(paragraphs, stopwords = []) {
     const result = [];
     const htmlDecoding = new entities.AllHtmlEntities();
 
@@ -58,7 +58,7 @@ class Presenter {
         Number(paragraph.wordsCount(), 10),
         Number(paragraph.stopwordDesity(stopwords), 10),
         Number(paragraph.stopwordsCount(stopwords), 10),
-        htmlDecoding.encode(paragraph.text())
+        htmlDecoding.encode(paragraph.text()),
       ));
     });
     logger.debug('result', result);
@@ -74,7 +74,7 @@ class Presenter {
    * boilerplate, undecided or good respectively. Headings are output as
    * undecided.
    * */
-  krdwrdOuptut(paragraphs) {
+  static krdwrdOuptut(paragraphs) {
     const result = [];
     paragraphs.forEach((paragraph) => {
       let cls = 1;
@@ -86,7 +86,7 @@ class Presenter {
         }
       }
 
-      for (let index = 0; index < paragraph.textNodes.length; index++) {
+      for (let index = 0; index < paragraph.textNodes.length; index += 1) {
         let str = paragraph.textNodes[index];
         // remove lead space
         str = str.replace(/^\s+/, '');

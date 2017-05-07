@@ -1,4 +1,5 @@
 import * as logger from 'loglevel';
+
 class Utils {
 
   constructor() {

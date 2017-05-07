@@ -1,8 +1,8 @@
 import S from 'string';
 import entities from 'html-entities';
 import * as logger from 'loglevel';
-import Core from './Core.js';
-import Presenter from './Presenter.js';
+import Core from './Core';
+import Presenter from './Presenter';
 /* eslint-disable */
 const STOP_LISTS_JSON = [
   {
@@ -427,13 +427,15 @@ export function stoplistBy(language) {
 }
 
 export function rawHtml(htmlText, language = '', format = 'default', options = {
-  lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
-  stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
-  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
+  lengthLow: LENGTH_LOW_DEFAULT,
+  lengthHigh: LENGTH_HIGH_DEFAULT,
+  stopwordsLow: STOPWORDS_LOW_DEFAULT,
+  stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
+  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT,
+  maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
   noHeadings: NO_HEADINGS_DEFAULT,
 }) {
   const core = new Core();
-  const presenter = new Presenter();
   let stopwordsLow = options.stopwordsLow;
   let stopwordsHigh = options.stopwordsHigh;
   let stoplist = [];
@@ -452,13 +454,13 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
     options.maxHeadingDistance, options.noHeadings);
   switch (format) {
     case 'default':
-      return presenter.defaultOuptut(paragrahps);
+      return Presenter.defaultOuptut(paragrahps);
     case 'boilerplate':
-      return presenter.defaultOuptut(paragrahps, false);
+      return Presenter.defaultOuptut(paragrahps, false);
     case 'detailed':
-      return presenter.detailOuptut(paragrahps, stoplist);
+      return Presenter.detailOuptut(paragrahps, stoplist);
     case 'krdwrd':
-      return presenter.krdwrdOuptut(paragrahps);
+      return Presenter.krdwrdOuptut(paragrahps);
     default:
       throw new Error('Unknown format');
   }
@@ -466,13 +468,15 @@ export function rawHtml(htmlText, language = '', format = 'default', options = {
 
 
 export function url(externalUrl, language = '', format = 'default', options = {
-  lengthLow: LENGTH_LOW_DEFAULT, lengthHigh: LENGTH_HIGH_DEFAULT,
-  stopwordsLow: STOPWORDS_LOW_DEFAULT, stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
-  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT, maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
+  lengthLow: LENGTH_LOW_DEFAULT,
+  lengthHigh: LENGTH_HIGH_DEFAULT,
+  stopwordsLow: STOPWORDS_LOW_DEFAULT,
+  stopwordsHigh: STOPWORDS_HIGH_DEFAULT,
+  maxLinkDensity: MAX_LINK_DENSITY_DEFAULT,
+  maxHeadingDistance: MAX_HEADING_DISTANCE_DEFAULT,
   noHeadings: NO_HEADINGS_DEFAULT,
 }) {
-  const core = new Core();
-  core.getHtmlOfUrl(externalUrl).then((response) => {
+  Core.getHtmlOfUrl(externalUrl).then((response) => {
     const htmlText = response.data;
     return rawHtml(htmlText, language, format, options);
   }).catch((error) => {

@@ -1,6 +1,6 @@
-import PathInfo from './PathInfo.js';
-import Paragraph from './Paragraph.js';
 import * as logger from 'loglevel';
+import PathInfo from './PathInfo';
+import Paragraph from './Paragraph';
 
 const PARAGRAPH_TAGS = [
   'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
@@ -63,7 +63,7 @@ class ParagraphMaker {
 
   characters(content) {
     const trim = String.prototype.trim;
-    if (!!trim.call(content)) {
+    if (trim.call(content)) {
       const text = this.paragraph.appendText(content);
       if (this.link) {
         this.paragraph.charsCountInLinks += text.length;
@@ -80,13 +80,11 @@ class ParagraphMaker {
           this.startElementNS(dom.name);
           this.parseHtmlDocument(dom.children);
           this.endElementNS(dom.name);
-        } else {
-          if (dom.type === 'text') {
-            this.characters(dom.data);
-          } else if (hasOwnProperty.call(dom, 'name')) {
-            // support br for multiple lines
-            this.startElementNS(dom.name);
-          }
+        } else if (dom.type === 'text') {
+          this.characters(dom.data);
+        } else if (hasOwnProperty.call(dom, 'name')) {
+          // support br for multiple lines
+          this.startElementNS(dom.name);
         }
       }
     });

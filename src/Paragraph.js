@@ -1,4 +1,4 @@
-import PathInfo from './PathInfo.js';
+import PathInfo from './PathInfo';
 
 /**
  * Object representing one block of text in HTML.
@@ -57,12 +57,14 @@ class Paragraph {
 
   stopwordsCount(stopwords = []) {
     let count = 0;
-    for (const word of this.text().split(' ')) {
+    const words = this.text().split(' ');
+    words.forEach((word) => {
       const isFound = stopwords.indexOf(word.toLowerCase());
       if (isFound !== -1) {
-        count++;
+        count += 1;
       }
-    }
+    });
+
     return count;
   }
 

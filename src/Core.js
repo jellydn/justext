@@ -3,11 +3,11 @@ import entities from 'html-entities';
 import axios from 'axios';
 import * as logger from 'loglevel';
 import ParagraphMaker from './ParagraphMaker';
-import Paragraph from './Paragraph.js';
+import Paragraph from './Paragraph';
 
 class Core {
 
-  getHtmlOfUrl(url) {
+  static getHtmlOfUrl(url) {
     const request = axios.create({
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -25,7 +25,7 @@ class Core {
    **/
   jusText(htmlText, stoplist = [], lengthLow, lengthHigh, stopwordsLow,
     stopwordsHigh, maxLinkDensity, maxHeadingDistance, noHeadings) {
-    const cleanHtml = this.preprocessor(htmlText, {
+    const cleanHtml = Core.preprocessor(htmlText, {
       head: true,
       footer: true,
       script: true,
@@ -33,12 +33,12 @@ class Core {
       style: true,
       comment: true,
     });
-    const htmlDocument = this.htmlToDom(cleanHtml);
+    const htmlDocument = Core.htmlToDom(cleanHtml);
     const maker = new ParagraphMaker();
     let paragraphs = maker.makeParagraphs(htmlDocument);
     paragraphs = this.classifyParagraphs(paragraphs, stoplist, lengthLow, lengthHigh,
       stopwordsLow, stopwordsHigh, maxLinkDensity, noHeadings);
-    paragraphs = this.reviseParagraphClassification(paragraphs, maxHeadingDistance);
+    paragraphs = Core.reviseParagraphClassification(paragraphs, maxHeadingDistance);
 
     return paragraphs;
   }
@@ -55,7 +55,8 @@ class Core {
 
     const stopList = stoplist.map(item => toLowerCase.call(item));
     const result = [];
-    for (const paragraph of paragraphs) {
+    /* eslint-disable no-param-reassign */
+    paragraphs.forEach((paragraph) => {
       const text = paragraph.text();
       const length = paragraph.len();
       const stopwordDesity = paragraph.stopwordDesity(stopList);
@@ -86,7 +87,7 @@ class Core {
         paragraph.cfClass = 'bad';
       }
       result.push(paragraph);
-    }
+    });
 
     return result;
   }
@@ -95,13 +96,14 @@ class Core {
    * Context-sensitive paragraph classification. Assumes that classify_pragraphs
    * has already been called.
    **/
-  reviseParagraphClassification(paragraphs, maxHeadingDistance) {
+  static reviseParagraphClassification(paragraphs, maxHeadingDistance) {
     const reviseParagraphs = [];
     // copy classes
-    for (const paragraph of paragraphs) {
+    paragraphs.forEach((item) => {
+      const paragraph = item;
       paragraph.classType = paragraph.cfClass;
       reviseParagraphs.push(paragraph);
-    }
+    });
 
     // good headings
     reviseParagraphs.forEach((paragraph, index) => {
@@ -114,7 +116,7 @@ class Core {
             break;
           }
           distance += reviseParagraphs[counter].text().length;
-          counter++;
+          counter += 1;
         }
       }
     });
@@ -123,8 +125,8 @@ class Core {
     const newClassType = [];
     reviseParagraphs.forEach((paragraph, index) => {
       if (paragraph.classType === 'short') {
-        const prevNeighbour = this.getPrevNeighbour(index, reviseParagraphs, true);
-        const nextNeighbour = this.getNextNeighbour(index, reviseParagraphs, true);
+        const prevNeighbour = Core.getPrevNeighbour(index, reviseParagraphs, true);
+        const nextNeighbour = Core.getNextNeighbour(index, reviseParagraphs, true);
         const neighbours = [prevNeighbour];
         if (neighbours.indexOf(nextNeighbour) === -1) {
           neighbours.push(nextNeighbour);
@@ -136,9 +138,9 @@ class Core {
           newClassType[index] = 'bad';
         } else if (
           (prevNeighbour === 'bad' &&
-            this.getPrevNeighbour(index, reviseParagraphs, false) === 'neargood') ||
+            Core.getPrevNeighbour(index, reviseParagraphs, false) === 'neargood') ||
           (nextNeighbour === 'bad' &&
-            this.getNextNeighbour(index, reviseParagraphs, false) === 'neargood')
+            Core.getNextNeighbour(index, reviseParagraphs, false) === 'neargood')
         ) {
           newClassType[index] = 'good';
         } else {
@@ -154,8 +156,8 @@ class Core {
     // revise neargood
     reviseParagraphs.forEach((paragraph, index) => {
       if (paragraph.classType === 'neargood') {
-        const prevNeighbour = this.getPrevNeighbour(index, reviseParagraphs, true);
-        const nextNeighbour = this.getNextNeighbour(index, reviseParagraphs, true);
+        const prevNeighbour = Core.getPrevNeighbour(index, reviseParagraphs, true);
+        const nextNeighbour = Core.getNextNeighbour(index, reviseParagraphs, true);
         if (prevNeighbour === 'bad' && nextNeighbour === 'bad') {
           reviseParagraphs[index].classType = 'bad';
         } else {
@@ -175,7 +177,7 @@ class Core {
             break;
           }
           distance += reviseParagraphs[counter].text().length;
-          counter++;
+          counter += 1;
         }
       }
     });
@@ -186,7 +188,7 @@ class Core {
    * Convert html string to HTML Document
    * rawHtml: string
    **/
-  htmlToDom(rawHtml) {
+  static htmlToDom(rawHtml) {
     // TODO: process encode for html string
     const htmlHandler = new htmlparser.DefaultHandler();
     const htmlParser = new htmlparser.Parser(htmlHandler);
@@ -199,7 +201,7 @@ class Core {
    * Removes unwanted parts of HTML.
    * rawHtml: string
    **/
-  preprocessor(rawHtml,
+  static preprocessor(rawHtml,
     options = {
       html: false,
       head: false,
@@ -267,7 +269,7 @@ class Core {
   /**
    * Get neighbour class type of paragraphs
    * */
-  getNeighbour(index, paragraphs, ignoreNearGood, inc, boundary) {
+  static getNeighbour(index, paragraphs, ignoreNearGood, inc, boundary) {
     let checkIndex = index;
     while (Number(checkIndex + inc) !== Number(boundary)) {
       checkIndex = Number(checkIndex + inc);
@@ -289,8 +291,8 @@ class Core {
    * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
    * can be returned, otherwise 'neargood' can be returned, too.
    * */
-  getPrevNeighbour(index, paragraphs, ignoreNearGood) {
-    return this.getNeighbour(index, paragraphs, ignoreNearGood, -1, -1);
+  static getPrevNeighbour(index, paragraphs, ignoreNearGood) {
+    return Core.getNeighbour(index, paragraphs, ignoreNearGood, -1, -1);
   }
 
   /**
@@ -298,8 +300,8 @@ class Core {
    * paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
    * can be returned, otherwise 'neargood' can be returned, too.
    * */
-  getNextNeighbour(index, paragraphs, ignoreNearGood) {
-    return this.getNeighbour(index, paragraphs, ignoreNearGood, 1, paragraphs.length);
+  static getNextNeighbour(index, paragraphs, ignoreNearGood) {
+    return Core.getNeighbour(index, paragraphs, ignoreNearGood, 1, paragraphs.length);
   }
 
 }

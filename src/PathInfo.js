@@ -12,9 +12,9 @@ class PathInfo {
   dom() {
     const html = [];
     // base on tag name
-    for (const item of this.elements) {
+    this.elements.forEach((item) => {
       html.push(item[0]);
-    }
+    });
     return html.join('.');
   }
 
@@ -22,9 +22,9 @@ class PathInfo {
     let path = '';
     // path base on tag name and order
     if (this.elements.length) {
-      for (const item of this.elements) {
+      this.elements.forEach((item) => {
         path += `/${item[0]}[${item[1]}]`;
-      }
+      });
     } else {
       path = '/';
     }

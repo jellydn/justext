@@ -13,8 +13,7 @@ describe('ParagraphMaker', () => {
 
     it('should return 0 when no paragraph', () => {
       const htmlString = '<html><body></body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(0);
@@ -27,8 +26,7 @@ describe('ParagraphMaker', () => {
         '<span class="class">that I</span> have in my head now</p>' +
         '<p>footer</p>' +
         '</body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(3);
@@ -45,8 +43,7 @@ describe('ParagraphMaker', () => {
         '<pre>pre<em>in </em>post</pre>' +
         '<blockquote>pre<em> in</em>post</blockquote>' +
         '</body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(4);
@@ -60,8 +57,7 @@ describe('ParagraphMaker', () => {
       const htmlString = '<html><body>' +
         '  normal text   <br><br> another   text  ' +
         '</body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(2);
@@ -77,8 +73,7 @@ describe('ParagraphMaker', () => {
         '<div>after text with variable <var>N</var> </div>' +
         '   I am inline\n\n\n\n and I am happy \n' +
         '</body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(5);
@@ -97,8 +92,7 @@ describe('ParagraphMaker', () => {
         '<div>after <a>text</a> with variable <var>N</var> </div>' +
         '   I am inline\n\n\n\n and I am happy \n' +
         '</body></html>';
-      const core = new Core();
-      const dom = core.htmlToDom(htmlString);
+      const dom = Core.htmlToDom(htmlString);
       const maker = new ParagraphMaker();
       const paragraphs = maker.makeParagraphs(dom);
       expect(paragraphs.length).to.equal(5);
