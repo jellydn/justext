@@ -1,10 +1,4 @@
 language: node_js
 node_js:
-  - "4"
-  - "5"
-  - "stable"
-sudo: false
-script: "gulp coverage"
-after_success:
-  - npm install -g codeclimate-test-reporter
-  - codeclimate-test-reporter < coverage/lcov.info
+  - "4.0"
+  - "5.0"

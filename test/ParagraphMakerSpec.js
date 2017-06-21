@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import ParagraphMaker from '../../src/ParagraphMaker';
-import Core from '../../src/Core';
+import ParagraphMaker from '../lib/ParagraphMaker';
+import Core from '../lib/Core';
 
 describe('ParagraphMaker', () => {
   describe('ParagraphMaker.makeParagraphs()', () => {

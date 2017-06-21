@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Core from '../../src/Core';
+import Core from '../lib/Core';
 
 describe('Core', () => {
   describe('core.preprocessor()', () => {

@@ -1,9 +1,10 @@
+var klaw = require('klaw')
 const fsx = require('fs-extra');
 const jetpack = require('fs-jetpack');
 const logger = require('loglevel');
 
 const items = [];
-fsx.walk('./src/stoplists')
+klaw('./lib/stoplists')
   .on('data', (item) => {
     const extPos = item.path.indexOf('.txt');
     const slashPos = item.path.lastIndexOf('/');
@@ -16,7 +17,7 @@ fsx.walk('./src/stoplists')
     }
   })
   .on('end', () => {
-    fsx.outputJson('./src/stoplists.json', items, (err) => {
+    fsx.outputJson('./lib/stoplists.json', items, (err) => {
       if (err) {
         logger.warn(err);
       }

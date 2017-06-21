@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import PathInfo from '../../src/PathInfo';
+import PathInfo from '../lib/PathInfo';
 
 describe('PathInfo', () => {
   it('should return empty path when init', () => {

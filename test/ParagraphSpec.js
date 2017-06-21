@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import Core from '../../src/Core';
-import Paragraph from '../../src/Paragraph';
-import PathInfo from '../../src/PathInfo';
+import Core from '../lib/Core';
+import Paragraph from '../lib/Paragraph';
+import PathInfo from '../lib/PathInfo';
 
 describe('Paragraph', () => {
   const repeat = String.prototype.repeat;
