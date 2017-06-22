@@ -12,8 +12,8 @@
     "pretest": "rollup -c",
     "test": "mocha",
     "prepublish": "npm test",
-    "demo": "lite-server",
-    "deploy": "gh-pages -d demo"
+    "demo": "copyfiles dist/*.* demo && lite-server",
+    "deploy": "copyfiles dist/*.* demo && gh-pages -d demo"
   },
   "repository": {
     "type": "git",
@@ -49,6 +49,7 @@
     "babel-register": "^6.18.0",
     "babelrc-rollup": "^3.0.0",
     "chai": "^4.0.2",
+    "copyfiles": "^1.2.0",
     "eslint": "^4.0.0",
     "fs-extra": "^3.0.1",
     "fs-jetpack": "^1.1.0",

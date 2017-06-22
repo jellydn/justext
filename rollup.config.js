@@ -2,15 +2,18 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 import istanbul from 'rollup-plugin-istanbul';
 import nodeResolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
 
 let plugins = [
   babel(babelrc()),
-  nodeResolve({ jsnext: true }),
-  commonjs(),
+  nodeResolve({
+    jsnext: true,
+    main: true,
+    browser: true,
+    modulesOnly: true,
+  }),
 ];
 
 if (process.env.BUILD !== 'production') {
@@ -21,7 +24,9 @@ if (process.env.BUILD !== 'production') {
 
 export default {
   entry: 'lib/index.js',
+  context: 'window',
   plugins: plugins,
+  external: external,
   globals: {
     loglevel: 'loglevel',
     axios: 'axios',
@@ -30,7 +35,6 @@ export default {
     'html-entities': 'html-entities',
     'sprintf-js': 'sprintf-js',
   },
-  external: external,
   targets: [
     {
       dest: pkg.main,

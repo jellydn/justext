@@ -5,7 +5,6 @@
     },
     "port": 8000,
     "browser": [
-        "google chrome",
         "firefox"
     ]
 }
