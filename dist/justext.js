@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('string'), require('html-entities'), require('loglevel'), require('htmlparser'), require('axios'), require('sprintf-js')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'string', 'html-entities', 'loglevel', 'htmlparser', 'axios', 'sprintf-js'], factory) :
-	(factory((global.justext = global.justext || {}),global.S,global.entities,global.log,global.htmlparser,global.axios,global.sprintf));
+	(factory((global.justext = global.justext || {}),global.string,global['html-entities'],global.loglevel,global.htmlparser,global.axios,global['sprintf-js']));
 }(this, (function (exports,S,entities,log,htmlparser,axios,sprintf) { 'use strict';
 
 S = S && 'default' in S ? S['default'] : S;
